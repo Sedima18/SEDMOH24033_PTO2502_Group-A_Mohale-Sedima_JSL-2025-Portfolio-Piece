@@ -44,3 +44,170 @@ export function saveTheme(theme) {
 export function loadTheme() {
   return localStorage.getItem(THEME_KEY);
 }
+
+// api.js
+
+/**
+ * Fetch tasks from remote API
+ * @returns {Promise<Array>} Resolves to array of task objects
+ * @throws Will throw an error if the network request fails
+ */
+export async function fetchTasks() {
+  const response = await fetch('https://jsl-kanban-api.vercel.app/');
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch tasks: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+// main.js
+
+import { fetchTasks } from './api.js';
+import { saveTasks, loadTasks } from './storage.js';
+import { renderTasks } from './tasks.js'; // You will create renderTasks() in step 4
+
+// DOM references
+const boardContainer = document.querySelector('#kanban-board'); // Your Kanban board wrapper
+const statusMessage = document.querySelector('#status-message'); // For loading/error messages
+
+async function init() {
+  // Show loading indicator
+  showStatus('Loading tasks...');
+
+  try {
+    let tasks = loadTasks();
+
+    // If no tasks in local storage, fetch from API
+    if (!tasks) {
+      tasks = await fetchTasks();
+      saveTasks(tasks);
+    }
+
+    // Clear message and render tasks
+    clearStatus();
+    renderTasks(tasks);
+
+  } catch (error) {
+    console.error(error);
+    showError('Failed to load tasks. Please check your connection.', init); // Retry on click
+  }
+}
+
+/**
+ * Show a status message (loading, info, etc.)
+ * @param {string} message
+ */
+function showStatus(message) {
+  if (statusMessage) {
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+  }
+}
+
+/**
+ * Show an error message with an optional retry button
+ * @param {string} message
+ * @param {Function} retryCallback
+ */
+function showError(message, retryCallback) {
+  if (statusMessage) {
+    statusMessage.innerHTML = `
+      <p>${message}</p>
+      <button id="retry-btn">Retry</button>
+    `;
+    statusMessage.style.display = 'block';
+
+    const retryBtn = document.querySelector('#retry-btn');
+    if (retryBtn) retryBtn.addEventListener('click', retryCallback);
+  }
+}
+
+/**
+ * Clear any status or error messages
+ */
+function clearStatus() {
+  if (statusMessage) {
+    statusMessage.textContent = '';
+    statusMessage.style.display = 'none';
+  }
+}
+
+// Start the app
+init();
+
+// tasks.js
+
+/**
+ * Render all tasks into their respective columns
+ * @param {Array} tasks - List of task objects { id, title, description, status }
+ */
+export function renderTasks(tasks) {
+  // Get column containers
+  const todoCol = document.querySelector('[data-column="todo"]');
+  const doingCol = document.querySelector('[data-column="doing"]');
+  const doneCol = document.querySelector('[data-column="done"]');
+
+  // Clear existing content
+  [todoCol, doingCol, doneCol].forEach(col => {
+    if (col) col.innerHTML = '';
+  });
+
+  // Loop through tasks and place in correct column
+  tasks.forEach(task => {
+    const taskEl = createTaskCard(task);
+
+    switch (task.status) {
+      case 'todo':
+        todoCol?.appendChild(taskEl);
+        break;
+      case 'doing':
+        doingCol?.appendChild(taskEl);
+        break;
+      case 'done':
+        doneCol?.appendChild(taskEl);
+        break;
+      default:
+        console.warn(`Unknown status "${task.status}" for task:`, task);
+    }
+  });
+}
+
+/**
+ * Create a task card element
+ * @param {Object} task - The task data
+ * @returns {HTMLElement} The DOM element for the task card
+ */
+function createTaskCard(task) {
+  const card = document.createElement('div');
+  card.className = 'task-card';
+  card.dataset.id = task.id;
+
+  card.innerHTML = `
+    <h3 class="task-title">${escapeHTML(task.title)}</h3>
+    <p class="task-desc">${escapeHTML(task.description || '')}</p>
+  `;
+
+  // Click opens modal for editing (you’ll implement in step 7)
+  card.addEventListener('click', () => {
+    // openTaskModal(task.id) will be added later
+    console.log(`Task clicked: ${task.id}`);
+  });
+
+  return card;
+}
+
+/**
+ * Escape HTML to prevent XSS when rendering
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
