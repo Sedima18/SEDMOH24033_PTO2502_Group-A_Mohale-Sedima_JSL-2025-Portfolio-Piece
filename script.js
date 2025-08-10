@@ -95,6 +95,27 @@ async function init() {
   }
 }
 
+import { openModal, closeModal } from './modal.js';
+import { createTask, getTasks } from './taskModel.js';
+import { renderTasks } from './tasks.js';
+
+document.getElementById('addTaskBtn').addEventListener('click', openModal);
+document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+
+document.getElementById('taskForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById('taskTitle').value;
+  const description = document.getElementById('taskDescription').value;
+  const status = document.getElementById('taskStatus').value;
+
+  createTask(title, description, status);
+  renderTasks(getTasks());
+
+  closeModal();
+  e.target.reset();
+});
+
 /**
  * Show a status message (loading, info, etc.)
  * @param {string} message
@@ -293,4 +314,14 @@ export function deleteTask(id) {
  */
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+// modal.js
+
+export function openModal() {
+  document.getElementById('taskModal').classList.add('open');
+}
+
+export function closeModal() {
+  document.getElementById('taskModal').classList.remove('open');
 }
