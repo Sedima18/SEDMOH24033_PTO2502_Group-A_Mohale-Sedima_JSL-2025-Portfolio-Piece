@@ -211,3 +211,86 @@ function escapeHTML(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+// taskModel.js
+
+const STORAGE_KEY = 'kanban_tasks';
+
+/**
+ * Get tasks from localStorage
+ * @returns {Array} tasks
+ */
+export function getTasks() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
+/**
+ * Save tasks to localStorage
+ * @param {Array} tasks
+ */
+export function saveTasks(tasks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+/**
+ * Create a new task
+ * @param {string} title
+ * @param {string} description
+ * @param {string} status - 'todo' | 'doing' | 'done'
+ * @returns {Object} newTask
+ */
+export function createTask(title, description, status = 'todo') {
+  const tasks = getTasks();
+
+  const newTask = {
+    id: generateId(),
+    title: title.trim(),
+    description: description.trim(),
+    status
+  };
+
+  tasks.push(newTask);
+  saveTasks(tasks);
+
+  return newTask;
+}
+
+/**
+ * Update an existing task
+ * @param {string} id
+ * @param {Object} updates - { title?, description?, status? }
+ * @returns {boolean} true if updated, false if not found
+ */
+export function updateTask(id, updates) {
+  const tasks = getTasks();
+  const index = tasks.findIndex(task => task.id === id);
+
+  if (index === -1) return false;
+
+  tasks[index] = { ...tasks[index], ...updates };
+  saveTasks(tasks);
+
+  return true;
+}
+
+/**
+ * Delete a task by ID
+ * @param {string} id
+ * @returns {boolean} true if deleted, false if not found
+ */
+export function deleteTask(id) {
+  const tasks = getTasks();
+  const newTasks = tasks.filter(task => task.id !== id);
+
+  if (tasks.length === newTasks.length) return false;
+
+  saveTasks(newTasks);
+  return true;
+}
+
+/**
+ * Generate a unique ID
+ */
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
