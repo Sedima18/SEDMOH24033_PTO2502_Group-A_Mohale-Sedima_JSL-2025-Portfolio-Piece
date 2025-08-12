@@ -30,6 +30,12 @@
       </div>
     </nav>
 
+          <div class="sidebar-controls">
+        <button id="toggleTheme" title="Toggle Light/Dark Mode">🌞</button>
+        <button id="toggleSidebar" title="Toggle Sidebar">⏪</button>
+      </div>
+
+
     <!-- Main Layout: Header with board title, add task button, and main content area for task columns. -->
     <div id="layout">
       <header id="header" class="sticky-header">
@@ -50,13 +56,27 @@
         <span>+ Add new task</span>
       </button>
 
+            <section class="columns">
+        <div class="column" data-status="todo">
+          <h4>To Do <span class="count"></span></h4>
+          <div class="tasks"></div>
+        </div>
+        <div class="column" data-status="doing">
+          <h4>Doing <span class="count"></span></h4>
+          <div class="tasks"></div>
+        </div>
+        <div class="column" data-status="done">
+          <h4>Done <span class="count"></span></h4>
+          <div class="tasks"></div>
+        </div>
+      </section>
 
 
   <!-- Task Modal -->
   <div id="taskModal" class="modal">
     <div class="modal-content">
       <button id="closeModalBtn" class="close-btn">&times;</button>
-      <h2 id="modalTitle">Task</h2>
+             <h2 id="modalTitle">Task</h2>
       <form id="taskForm">
         <label>
           Title:
@@ -82,37 +102,6 @@
     </div>
   </div>
 
-        <div class="container">
-        <main class="card-column-main">
-          <!-- Task Columns: Display tasks grouped by status (TODO, DOING, DONE). -->
-          <div class="column-div" data-status="todo">
-            <div id="todo-head-div" class="column-head-div">
-              <span class="dot" id="todo-dot"></span>
-              <h4 id="toDoText" class="columnHeader">TODO (4)</h4>
-            </div>
-            <!-- Tasks container for TODO -->
-            <div class="tasks-container">
-          </div>
-          <!-- DOING Column -->
-          <div class="column-div" data-status="doing">
-            <div id="doing-head-div" class="column-head-div">
-              <span class="dot" id="doing-dot"></span>
-              <h4 id="doingText" class="columnHeader">DOING (2)</h4>
-            </div>
-            <!-- Tasks container for DOING -->
-            <div class="tasks-container">
-            </div>
-          </div>
-          <!-- DONE Column -->
-          <div class="column-div" data-status="done">
-            <div id="done-head-div" class="column-head-div">
-              <span class="dot" id="done-dot"></span>
-              <h4 id="doneText" class="columnHeader">DONE (2)</h4>
-            </div>
-            <!-- Tasks container for DONE -->
-            <div class="tasks-container">
-            </div>
-              <!-- Navigation sidebar unchanged… -->
 
   <!-- Scripts -->
   <script type="module" src="script.js"></script>

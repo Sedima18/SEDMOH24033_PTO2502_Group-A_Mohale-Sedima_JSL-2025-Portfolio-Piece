@@ -520,6 +520,64 @@ form select {
   color: white;
   border: none;
   font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button[type="submit"]:hover {
+  background-color: #5a55c2;
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Responsive for small devices */
+@media (max-width: 480px) {
+  .modal {
+    width: 90%;
+    right: 5%;
+    top: 70px;
+  }
+
+  #open-modal-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 24px;
+    border-radius: 50%;
+    text-align: center;
+  }
+
+  #open-modal-btn span {
+    display: none;
+  }
+
+  #open-modal-btn::before {
+    content: "+";
+    display: block;
+    font-weight: bold;
+  }
+}
+
+
+/******** Mobile ********/
+@media screen and (max-width: 576px) {
+  .card-column-main {
+    grid-template-columns: minmax(
+      0,
+      380px
+    ); /* Stack columns in single column */
+  }
+
+  .column-div {
+    padding: 24px;
+  }
 }
 
 .delete-btn {
@@ -542,4 +600,67 @@ form select {
 .delete-btn:active {
   background-color: #b71c1c; /* Even darker red on click */
   transform: translateY(0);
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0; 
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #e53935;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #45a049;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
 }
