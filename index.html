@@ -45,69 +45,44 @@
         </div>
       </header>
 
-      <!-- Add Task Button -->
+    <!-- Add Task Button -->
       <button id="open-modal-btn" class="add-task-btn">
         <span>+ Add new task</span>
       </button>
 
-      <!-- Add Task Modal -->
-      <div id="task-modal" class="modal hidden">
-        <div class="modal-content">
-          <span id="close-modal" class="close-button">&times;</span>
-          <h2>Add New Task</h2>
-          <form id="task-form">
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required />
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
 
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-              <option value="todo">To Do</option>
-              <option value="doing">Doing</option>
-              <option value="done">Done</option>
-            </select>
-
-            <button type="submit">create task</button>
-          </form>
+  <!-- Task Modal -->
+  <div id="taskModal" class="modal">
+    <div class="modal-content">
+      <button id="closeModalBtn" class="close-btn">&times;</button>
+      <h2 id="modalTitle">Task</h2>
+      <form id="taskForm">
+        <label>
+          Title:
+          <input type="text" id="taskTitle" required />
+        </label>
+        <label>
+          Description:
+          <textarea id="taskDescription"></textarea>
+        </label>
+        <label>
+          Status:
+          <select id="taskStatus">
+            <option value="todo">To Do</option>
+            <option value="doing">Doing</option>
+            <option value="done">Done</option>
+          </select>
+        </label>
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Save</button>
+          <button type="button" id="deleteTaskBtn" class="delete-btn">Delete</button>
         </div>
-      </div>
-      
-      <div class="container">
-        <main class="card-column-main">
-          <!-- Task Columns: Display tasks grouped by status (TODO, DOING, DONE). -->
-          <div class="column-div" data-status="todo">
-            <div id="todo-head-div" class="column-head-div">
-              <span class="dot" id="todo-dot"></span>
-              <h4 id="toDoText" class="columnHeader">TODO (4)</h4>
-            </div>
-            <!-- Tasks container for TODO -->
-            <div class="tasks-container">
-            </div>
-          </div>
-          <!-- DOING Column -->
-          <div class="column-div" data-status="doing">
-            <div id="doing-head-div" class="column-head-div">
-              <span class="dot" id="doing-dot"></span>
-              <h4 id="doingText" class="columnHeader">DOING (2)</h4>
-            </div>
-            <!-- Tasks container for DOING -->
-            <div class="tasks-container">
-            </div>
-          </div>
-          <!-- DONE Column -->
-          <div class="column-div" data-status="done">
-            <div id="done-head-div" class="column-head-div">
-              <span class="dot" id="done-dot"></span>
-              <h4 id="doneText" class="columnHeader">DONE (2)</h4>
-            </div>
-            <!-- Tasks container for DONE -->
-            <div class="tasks-container">
-            </div>
-              <!-- Navigation sidebar unchanged… -->
+      </form>
+    </div>
+  </div>
 
-
-         <script type="module"></script>
-  </body>
+  <!-- Scripts -->
+  <script type="module" src="main.js"></script>
+</body>
 </html>
