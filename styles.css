@@ -521,3 +521,25 @@ form select {
   border: none;
   font-weight: bold;
 }
+
+.delete-btn {
+  background-color: #e63946; /* Red tone */
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.delete-btn:hover {
+  background-color: #d62828; /* Darker red on hover */
+  transform: translateY(-2px);
+}
+
+.delete-btn:active {
+  background-color: #b71c1c; /* Even darker red on click */
+  transform: translateY(0);
+}
