@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,11 +7,10 @@
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;1,400&display=swap"
       rel="stylesheet"
     />
-
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="icon"
-      type="image/png"
+      type="image/svg+xml"
       sizes="32x32"
       href="./assets/favicon.svg"
     />
@@ -18,24 +18,24 @@
   </head>
 
   <body>
-    <!-- Navigation Sidebar: Contains the logo, navigation links for boards, and theme toggle. -->
+    <!-- Navigation Sidebar -->
     <nav class="side-bar" id="side-bar-div">
       <div id="side-logo-div">
-        <img id="logo" src="./assets/logo-light.svg" alt="logo-light" />
+        <img id="logo" src="./assets/logo-light.svg" alt="Kanban logo" />
       </div>
 
       <div class="boards-nav-links-div" id="boards-nav-links-div">
         <h4 id="headline-sidepanel">ALL BOARDS (1)</h4>
         <button class="board-btn">Launch Career</button>
-              <div class="sidebar-controls">
-        <button id="toggleTheme" title="Toggle Light/Dark Mode">🌞</button>
-        <button id="toggleSidebar" title="Toggle Sidebar">⏪</button>
-      </div>
+
+        <div class="sidebar-controls">
+          <button id="themeToggleBtn" title="Toggle Light/Dark Mode" aria-label="Toggle theme">🌞</button>
+          <button id="toggleSidebar" title="Toggle Sidebar" aria-label="Toggle sidebar">⏪</button>
+        </div>
       </div>
     </nav>
 
-
-    <!-- Main Layout: Header with board title, add task button, and main content area for task columns. -->
+    <!-- Main Layout -->
     <div id="layout">
       <header id="header" class="sticky-header">
         <div class="header-name-div">
@@ -44,65 +44,75 @@
             alt="logo-mobile"
             class="logo-mobile"
           />
-          <h2 class="header-board-name" id="header-board-name">
-            Launch Career
-          </h2>
+          <h2 class="header-board-name" id="header-board-name">Launch Career</h2>
         </div>
       </header>
 
-    <!-- Add Task Button -->
-      <button id="open-modal-btn" class="add-task-btn">
+      <!-- Add Task Button -->
+      <button id="addTaskBtn" class="add-task-btn" aria-haspopup="dialog">
         <span>+ Add new task</span>
       </button>
 
-            <section class="columns">
+      <!-- Columns -->
+      <section class="columns" aria-label="Kanban Columns">
         <div class="column" data-status="todo">
-          <h4>To Do <span class="count"></span></h4>
-          <div class="tasks"></div>
+          <h4>To Do <span class="count" id="todoCount"></span></h4>
+          <div class="tasks" id="todoColumn"></div>
         </div>
+
         <div class="column" data-status="doing">
-          <h4>Doing <span class="count"></span></h4>
-          <div class="tasks"></div>
+          <h4>Doing <span class="count" id="doingCount"></span></h4>
+          <div class="tasks" id="doingColumn"></div>
         </div>
+
         <div class="column" data-status="done">
-          <h4>Done <span class="count"></span></h4>
-          <div class="tasks"></div>
+          <h4>Done <span class="count" id="doneCount"></span></h4>
+          <div class="tasks" id="doneColumn"></div>
         </div>
       </section>
+    </div> <!-- <-- closed #layout -->
 
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-content">
+        <button id="closeModalBtn" class="close-btn" aria-label="Close">&times;</button>
+        <h2 id="modalTitle">Task</h2>
 
-  <!-- Task Modal -->
-  <div id="taskModal" class="modal">
-    <div class="modal-content">
-      <button id="closeModalBtn" class="close-btn">&times;</button>
-             <h2 id="modalTitle">Task</h2>
-      <form id="taskForm">
-        <label>
-          Title:
+        <form id="taskForm">
+          <label for="taskTitle">Title:</label>
           <input type="text" id="taskTitle" required />
-        </label>
-        <label>
-          Description:
+
+          <label for="taskDescription">Description:</label>
           <textarea id="taskDescription"></textarea>
-        </label>
-        <label>
-          Status:
+
+          <label for="taskStatus">Status:</label>
           <select id="taskStatus">
             <option value="todo">To Do</option>
             <option value="doing">Doing</option>
             <option value="done">Done</option>
           </select>
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="save-btn">Save</button>
-          <button type="button" id="deleteTaskBtn" class="delete-btn">Delete</button>
-        </div>
-      </form>
+
+          <label for="taskPriority">Priority:</label>
+          <select id="taskPriority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+
+          <!-- Buttons side-by-side -->
+          <div class="modal-actions">
+            <button type="submit" class="save-btn">Save</button>
+            <button type="button" id="deleteTaskBtn" class="delete-btn">Delete</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
 
+    <!-- Status / Errors (optional) -->
+    <div id="statusMessage" class="status-message" style="display:none;"></div>
 
-  <!-- Scripts -->
-  <script type="module" src="script.js"></script>
-</body>
+    <!-- Scripts -->
+    <!-- If your entry file is named main.js, change this src accordingly -->
+    <script type="module" src="main.js"></script>
+  </body>
 </html>
