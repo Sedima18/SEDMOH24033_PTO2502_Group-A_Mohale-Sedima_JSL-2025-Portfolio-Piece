@@ -85,6 +85,37 @@ h4 {
   overflow: hidden; /* Prevents overflowed text/icons from showing */
 }
 
+/* Theme Toggle Button Position */
+#themeToggleBtn {
+  position: fixed;       /* stays in place even when scrolling */
+  bottom: 20px;          /* distance from bottom */
+  left: 20px;            /* distance from left */
+  cursor: pointer;
+  font-size: 18px;
+  padding: 8px 12px;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#themeToggleBtn:hover {
+  background-color: #ddd;
+  transform: scale(1.1);
+}
+
+/* Dark mode button style */
+body.dark #themeToggleBtn {
+  background-color: #333;
+  color: white;
+}
+
+body.dark #themeToggleBtn:hover {
+  background-color: #444;
+}
+
+
 /* ===============
    Main Layout
 ================ */
