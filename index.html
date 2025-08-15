@@ -17,94 +17,118 @@
     <title>Kanban Task Management</title>
   </head>
 
-    <body>
-    <!-- ===========================
-         Sidebar (left)
-         =========================== -->
-    <nav class="side-bar" id="side-bar-div" aria-label="Sidebar">
+  <body>
+    <!-- Navigation Sidebar: Contains the logo, navigation links for boards, and theme toggle. -->
+    <nav class="side-bar" id="side-bar-div">
       <div id="side-logo-div">
-        <img id="logo" src="./assets/logo-light.svg" alt="Launch Career logo">
+        <img id="logo" src="./assets/logo-light.svg" alt="logo-light" />
       </div>
 
       <div class="boards-nav-links-div" id="boards-nav-links-div">
         <h4 id="headline-sidepanel">ALL BOARDS (1)</h4>
-        <button class="board-btn" type="button">Launch Career</button>
-            <!-- Theme Toggle Button -->
+        <button class="board-btn">Launch Career</button>
+    <!-- Theme Toggle Button -->
      <button id="themeToggleBtn" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
      🌞
     </button>
       </div>
     </nav>
 
-
-    <!-- ===========================
-         Main layout (right)
-         =========================== -->
+    <!-- Main Layout: Header with board title, add task button, and main content area for task columns. -->
     <div id="layout">
       <header id="header" class="sticky-header">
         <div class="header-name-div">
-          <img src="./assets/favicon.svg" alt="logo-mobile" class="logo-mobile">
-          <h2 class="header-board-name" id="header-board-name">Launch Career</h2>
+          <img
+            src="./assets/favicon.svg"
+            alt="logo-mobile"
+            class="logo-mobile"
+          />
+          <h2 class="header-board-name" id="header-board-name">
+            Launch Career
+          </h2>
         </div>
       </header>
 
-
-      <!-- Add Task Button (top right) -->
-      <button id="open-modal-btn" class="add-task-btn" type="button" aria-haspopup="dialog" aria-controls="task-modal">
+      <!-- Add Task Button -->
+      <button id="open-modal-btn" class="add-task-btn">
         <span>+ Add new task</span>
       </button>
 
-      <!-- Board container -->
-      <div class="container">
-        <main class="card-column-main" role="region" aria-label="Board columns">
-          <!-- TODO Column -->
-          <section class="column-div" data-status="todo" aria-labelledby="toDoText">
-            <div id="todo-head-div" class="column-head-div">
-              <span class="dot" id="todo-dot" aria-hidden="true"></span>
-              <h4 id="toDoText" class="columnHeader">TODO (<span id="todo-count">4</span>)</h4>
-            </div>
-            <div class="tasks-container" id="todo-tasks"></div>
-          </section>
+      <!-- Add Task Modal -->
+      <div id="task-modal" class="modal hidden">
+        <div class="modal-content">
+          <span id="close-modal" class="close-button">&times;</span>
+          <h2>Add New Task</h2>
+          <form id="task-form">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required />
 
-          <!-- DOING Column -->
-          <section class="column-div" data-status="doing" aria-labelledby="doingText">
-            <div id="doing-head-div" class="column-head-div">
-              <span class="dot" id="doing-dot" aria-hidden="true"></span>
-              <h4 id="doingText" class="columnHeader">DOING (<span id="doing-count">2</span>)</h4>
-            </div>
-            <div class="tasks-container" id="doing-tasks"></div>
-          </section>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
 
-          <!-- DONE Column -->
-          <section class="column-div" data-status="done" aria-labelledby="doneText">
-            <div id="done-head-div" class="column-head-div">
-              <span class="dot" id="done-dot" aria-hidden="true"></span>
-              <h4 id="doneText" class="columnHeader">DONE (<span id="done-count">2</span>)</h4>
-            </div>
-            <div class="tasks-container" id="done-tasks"></div>
-          </section>
-        </main>
-      </div> <!-- .container -->
-    </div> <!-- #layout -->
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+              <option value="todo">To Do</option>
+              <option value="doing">Doing</option>
+              <option value="done">Done</option>
+            </select>
+            <label for="taskPriority">Priority</label>
+            <select id="taskPriority" name="priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
 
-    <!-- ===========================
-         Modal(s) and backdrops — put these at the end of <body>
-         1) Task add/edit modal (task-modal)
-         2) Confirm delete modal (confirm-modal)
-         =========================== -->
+            <button type="submit">save changes</button>
+            <button type="submit">delete task</button>
+          </form>
+        </div>
+      </div>
+      
+      
+ <!-- Board container -->
+<div class="container">
+  <main class="card-column-main" role="region" aria-label="Board columns">
 
-    <!-- BACKDROP + Add/Edit Task Modal -->
+    <!-- TODO Column -->
+    <section class="column-div" data-status="todo">
+      <div class="column-head-div">
+        <span class="dot" style="background-color:#635fc7;" aria-hidden="true"></span>
+        <h4 class="columnHeader">TODO (<span id="todo-count">0</span>)</h4>
+      </div>
+      <div class="tasks-container" id="todo-tasks"></div>
+    </section>
+
+    <!-- DOING Column -->
+    <section class="column-div" data-status="doing">
+      <div class="column-head-div">
+        <span class="dot" style="background-color:#49C4E5;" aria-hidden="true"></span>
+        <h4 class="columnHeader">DOING (<span id="doing-count">0</span>)</h4>
+      </div>
+      <div class="tasks-container" id="doing-tasks"></div>
+    </section>
+
+    <!-- DONE Column -->
+    <section class="column-div" data-status="done">
+      <div class="column-head-div">
+        <span class="dot" style="background-color:#67E2AE;" aria-hidden="true"></span>
+        <h4 class="columnHeader">DONE (<span id="done-count">0</span>)</h4>
+      </div>
+      <div class="tasks-container" id="done-tasks"></div>
+    </section>
+
+  </main>
+</div>
+
+ <!-- Add/Edit Task Modal -->
     <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true">
-      <div class="modal-window" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+      <div class="modal-window" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
           <button id="closeModalBtn" class="close-btn" aria-label="Close dialog">&times;</button>
           <h2 id="modalTitle">Add / Edit Task</h2>
-
-          <div id="modalDesc" class="visually-hidden">Dialog for creating or editing a task</div>
-
           <form id="taskForm" autocomplete="off">
             <label for="taskTitle">Title</label>
-            <input type="text" id="taskTitle" name="title" required>
+            <input type="text" id="taskTitle" name="title" required />
 
             <label for="taskDescription">Description</label>
             <textarea id="taskDescription" name="description"></textarea>
@@ -124,53 +148,34 @@
             </select>
 
             <div class="modal-actions" style="display:flex; gap:12px; justify-content:flex-end; margin-top:12px;">
-              <button type="button" id="cancelTask" class="submit-btn">Cancel</button>
-
-              <!-- Save button -->
               <button type="submit" id="saveTask" class="submit-btn">Save</button>
-
-              <!-- Optional inline delete button (for editing existing tasks)
-                   If you want to show delete inside the edit modal, put it here.
-                   Note: the "primary" delete confirmation should still use confirm-modal. -->
-              <button type="button" id="deleteFromEdit" class="delete-button icon-only" aria-label="Delete task">
-                <!-- you can place an SVG trash icon here instead of text -->
-                🗑
-              </button>
+              <button type="button" id="deleteFromEdit" class="submit-btn">Delete</button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- BACKDROP + Confirm Delete Modal (separate) -->
+    <!-- Delete Confirmation Modal -->
     <div class="modal-backdrop" id="confirm-backdrop" aria-hidden="true">
       <div class="modal-window" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
         <div class="modal-header">
           <h3 id="confirm-title">Delete task?</h3>
           <button class="close-btn" id="closeConfirm" aria-label="Close dialog">&times;</button>
         </div>
-
         <div class="modal-body">
           <p>Are you sure you want to delete this task? This action cannot be undone.</p>
         </div>
-
         <div class="modal-actions" style="display:flex; gap:12px; justify-content:flex-end;">
-          <button class="submit-btn" id="cancel-delete" type="button">Cancel</button>
-
-          <!-- <-- PUT THE RED DELETE BUTTON HERE (inside confirm modal-actions) -->
           <button class="delete-button" id="confirm-delete" type="button" aria-label="Confirm delete">Delete</button>
         </div>
       </div>
     </div>
 
-    <!-- ===========================
-         JavaScript files (defer) — load at the end of body
-         keep order: storage -> repo -> renderer -> modal -> main
-         =========================== -->
-    <script src="js/storage.js" defer></script>
-    <script src="js/taskRepo.js" defer></script>
-    <script src="js/taskRenderer.js" defer></script>
-    <script src="js/modal.js" defer></script>
-    <script src="js/main.js" defer></script>
+<div id="loading-message">Loading tasks...</div>
+    <div id="error-message" style="display:none;color:red;">Failed to load tasks!</div>
+
+
+         <script src="main.js"></script>
   </body>
 </html>

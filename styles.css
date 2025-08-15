@@ -10,7 +10,6 @@
   --secondary-color: #f4f7fd;
   --primary-font-color: #000000;
   --secondary-font-color: #828fa3;
-  --primary-btn-color: #635fc7;
   --primary-box-shadow: 0px 4px 6px rgba(54, 78, 126, 0.1015); /* Subtle shadow for card depth */
   --sidebar-width: 300px; /* Sidebar fixed width */
 }
@@ -72,7 +71,7 @@ h4 {
   display: flex;
   align-items: center;
   gap: 10px; /* Space between icon and text */
-  background-color: var(--primary-btn-color);
+  background-color: #635fc7;
   color: #fff;
   border: none;
   border-radius: 0 100px 100px 0; /* Pill shape only on right side */
@@ -149,29 +148,6 @@ header {
 
 .logo-mobile {
   display: none; /* Hidden on desktop; shown on smaller screens */
-}
-
-.add-task-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: #635fc7;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.add-task-btn:hover {
-  background-color: #5a55c2;
-}
-
-#layout {
-  position: relative;
 }
 
 /* ===============
@@ -302,6 +278,7 @@ dialog {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
 }
 
 .modal-header h3 {
@@ -327,37 +304,6 @@ dialog {
 
 .close-btn:focus {
   outline: none;
-}
-
-/* Form elements */
-form label {
-  display: block;
-  font-weight: 600;
-  font-size: 0.75rem;
-  margin-top: 12px;
-  margin-bottom: 4px;
-  color: #828fa3;
-}
-
-form input,
-form textarea,
-form select {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #828fa3;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 0.8125em;
-  resize: vertical;
-}
-
-form select {
-  appearance: none; /* Remove native arrow */
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="%23828FA3" stroke-width="3" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>')
-    no-repeat right 0.75rem center;
-
-  background-size: 1.4rem;
-  padding-right: 1rem;
 }
 
 #add-new-task-btn {
@@ -547,6 +493,37 @@ textarea {
 
 
 
+/* Form elements */
+form label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.75em;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: #828fa3;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #828fa3;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8125em;
+  resize: vertical;
+}
+
+form select {
+  appearance: none; /* Remove native arrow */
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="%23828FA3" stroke-width="3" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>')
+    no-repeat right 0.75rem center;
+
+  background-size: 1.4rem;
+  padding-right: 1rem;
+}
+
 /* ========================
    Responsive Styles
 ======================== */
@@ -628,6 +605,353 @@ textarea {
   }
 }
 
+.task-card {
+  background-color: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Add Task Button Positioned Top Right */
+#open-modal-btn {
+  position: fixed; /* stays on screen even when scrolling */
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #635fc7;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+#open-modal-btn:hover {
+  background-color: #5a55c2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #open-modal-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #open-modal-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+    padding: 0;
+    border-radius: 50%;
+    text-align: center;
+  }
+
+  #open-modal-btn span {
+    display: none; /* Hide text on small screens */
+  }
+
+  #open-modal-btn::before {
+    content: "+";
+    display: block;
+    font-weight: bold;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+/* Add Task Button — Top Right of Page */
+#open-modal-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #635fc7;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+#open-modal-btn:hover {
+  background-color: #5a55c2;
+}
+
+/* Modal container */
+.modal {
+  position: fixed;
+  top: 70px; /* Push below the button */
+  right: 20px;
+  z-index: 999;
+  background-color: #fff;
+  width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Hide modal by default */
+.hidden {
+  display: none;
+}
+
+/* Modal content layout */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+/* Form elements */
+.modal-content input,
+.modal-content textarea,
+.modal-content select,
+.modal-content button[type="submit"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.modal-content button[type="submit"] {
+  background-color: #635fc7;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content button[type="submit"]:hover {
+  background-color: #5a55c2;
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Responsive for small devices */
+@media (max-width: 480px) {
+  .modal {
+    width: 90%;
+    right: 5%;
+    top: 70px;
+  }
+
+  #open-modal-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 24px;
+    border-radius: 50%;
+    text-align: center;
+  }
+
+  #open-modal-btn span {
+    display: none;
+  }
+
+  #open-modal-btn::before {
+    content: "+";
+    display: block;
+    font-weight: bold;
+  }
+}
+
+/* --------------------------
+   Loading & Error Messages
+   -------------------------- */
+
+/* Hide the loading and error messages by default */
+#loading-message,
+#error-message {
+  display: none; /* Hidden initially */
+  font-size: 0.95rem;
+  margin-top: 8px;
+  color: #828fa3; /* default text color */
+}
+
+/* If you want to show loading dynamically, add .show via JS */
+#loading-message.show {
+  display: block;
+}
+
+/* If error occurs, add .show via JS */
+#error-message.show {
+  display: block;
+  color: var(--danger); /* red for errors */
+}
+
+/* --------------------------
+   Delete Buttons
+   -------------------------- */
+
+/* Applies to all delete buttons (edit modal + confirm modal) */
+#deleteFromEdit,
+.delete-button {
+  background-color: var(--danger);      /* bright red */
+  color: #fff;
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover & active states */
+#deleteFromEdit:hover,
+.delete-button:hover {
+  background-color: var(--danger-hover);
+  transform: translateY(-1px);
+}
+
+#deleteFromEdit:active,
+.delete-button:active {
+  background-color: var(--danger-pressed);
+  transform: translateY(0);
+}
+
+/* Focus state for accessibility */
+#deleteFromEdit:focus-visible,
+.delete-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(244,67,54,0.18);
+}
+
+/* ==========================
+   Dark Theme
+========================== */
+body.dark-theme {
+  background-color: #1e1e2f;
+  color: #ffffff;
+}
+
+/* Header */
+header.dark-theme {
+  background-color: #2c2c3e;
+  color: #ffffff;
+}
+
+/* Sidebar */
+.side-bar.dark-theme {
+  background-color: #2c2c3e;
+  color: #ffffff;
+}
+
+/* ==========================
+   Modal Styles
+========================== */
+#modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+body.dark-theme #modal-backdrop {
+  background-color: rgba(255, 255, 255, 0.1); /* lighter overlay in dark mode */
+}
+
+#task-modal {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-theme #task-modal {
+  background-color: #2c2c3e;
+  color: #ffffff;
+}
+
+/* ==========================
+   Theme Toggle Button
+========================== */
+#themeToggleBtn {
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.6rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #635fc7;
+  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#themeToggleBtn:hover {
+  background-color: #5243c2;
+}
+
+/* ==========================
+   Optional: Toggle Switch
+========================== */
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: #635fc7;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch .switch-circle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+body.dark-theme .toggle-switch {
+  background-color: #ffffff;
+}
+
+body.dark-theme .toggle-switch .switch-circle {
+  transform: translateX(24px);
+}
+
+
 /******** Mobile ********/
 @media screen and (max-width: 576px) {
   .card-column-main {
@@ -640,20 +964,4 @@ textarea {
   .column-div {
     padding: 24px;
   }
-
-  #add-new-task-btn {
-    font-size: 0;
-    padding: 12px;
-  }
-
-  #add-new-task-btn::before {
-    content: "+";
-    font-size: 18px;
-    font-weight: 800;
-    padding-left: 14px;
-    padding-right: 14px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
 }
-
