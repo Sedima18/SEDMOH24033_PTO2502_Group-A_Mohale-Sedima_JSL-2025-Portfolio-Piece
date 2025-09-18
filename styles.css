@@ -114,6 +114,387 @@ body.dark #themeToggleBtn:hover {
   background-color: #444;
 }
 
+.theme-btn:hover {
+  background-color: #222;
+  transform: scale(1.1);
+}
+
+.sidebar-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: #f4f4f4;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%); /* hidden by default */
+  z-index: 1500;
+}
+
+.sidebar.active {
+  transform: translateX(0); /* visible */
+}
+
+/* Dark theme for sidebar */
+body.dark-theme .sidebar {
+  background: #222;
+  color: #fff;
+}
+
+/* Theme toggle fixed at bottom left */
+.theme-toggle {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* Light Theme */
+body.light-theme {
+  background: #f4f7fd;
+  color: #000;
+}
+
+body.light-theme .side-bar {
+  background: #fff;
+}
+
+body.light-theme .modal {
+  background: #fff;
+  color: #000;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background: #20212c;
+  color: #fff;
+}
+
+body.dark-theme .side-bar {
+  background: #2b2c37;
+}
+
+body.dark-theme .modal {
+  background: #2b2c37;
+  color: #fff;
+}
+
+body.dark-theme header {
+  background: #2b2c37;
+  border-bottom: 1px solid #444;
+}
+
+body.dark-theme .column-div {
+  background: #2b2c37;
+  border: 1px solid #444;
+}
+
+/* Theme toggle fixed at bottom left */
+.theme-toggle {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Switch design */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #4f46e5;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Theme icons */
+.theme-icon {
+  font-size: 18px;
+}
+
+/* Light Theme */
+body.light-theme {
+  background: #f4f7fd;
+  color: #000;
+}
+
+body.light-theme .side-bar {
+  background: #fff;
+}
+
+body.light-theme .modal {
+  background: #fff;
+  color: #000;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background: #20212c;
+  color: #fff;
+}
+
+body.dark-theme .side-bar {
+  background: #2b2c37;
+}
+
+body.dark-theme .modal {
+  background: #2b2c37;
+  color: #fff;
+}
+
+body.dark-theme header {
+  background: #2b2c37;
+  border-bottom: 1px solid #444;
+}
+
+body.dark-theme .column-div {
+  background: #2b2c37;
+  border: 1px solid #444;
+}
+
+/* === Theme Toggle Button === */
+.theme-btn {
+  position: fixed;
+  bottom: 80px;   /* above sidebar button */
+  left: 20px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2001;
+}
+
+.theme-btn:hover {
+  background-color: #222;
+  transform: scale(1.1);
+}
+
+/* Dark mode updates */
+body.dark-theme .theme-btn {
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: #f4f4f4;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  z-index: 1500;
+}
+
+/* Hidden state */
+.sidebar.hidden {
+  display: none;
+}
+
+/* Dark mode */
+body.dark-theme .sidebar {
+  background: #222;
+  color: #fff;
+}
+
+/* === Theme Toggle Button === */
+.theme-btn {
+  position: fixed;
+  bottom: 80px;   /* above sidebar button */
+  left: 20px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2001;
+}
+
+.theme-btn:hover {
+  background-color: #222;
+  transform: scale(1.1);
+}
+
+/* === Sidebar Toggle Button === */
+.sidebar-btn {
+  position: fixed;
+  bottom: 20px;   /* below theme toggle */
+  left: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2001;
+}
+
+.sidebar-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Theme toggle bottom-left */
+.theme-toggle {
+  position: fixed;
+  bottom: 70px; /* keep space for sidebar toggle */
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  z-index: 2000;
+}
+
+/* Sidebar toggle button BELOW theme toggle */
+.sidebar-btn {
+  position: fixed;
+  bottom: 20px; /* sits below the theme toggle */
+  left: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2000;
+}
+
+.sidebar-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Theme toggle button */
+.theme-btn {
+  position: fixed;
+  bottom: 70px; /* above the sidebar button */
+  left: 20px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2000;
+}
+
+.theme-btn:hover {
+  background-color: #222;
+  transform: scale(1.1);
+}
+
+/* Sidebar toggle button */
+.sidebar-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2000;
+}
+
+.sidebar-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
 
 /* ===============
    Main Layout
