@@ -688,6 +688,223 @@ dialog {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   /*font-family: "Plus Jakarta Sans", sans-serif;*/
 }
+/* Light Theme */
+body.light-theme {
+  background-color: #f4f7fd;
+  color: #000;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background-color: #20212c;
+  color: #fff;
+}
+
+/* Modal Background Colors */
+.modal-box.light-theme-modal {
+  background-color: #ffffff;
+  color: #000;
+}
+
+.modal-box.dark-theme-modal {
+  background-color: #2b2c37;
+  color: #fff;
+}
+
+/* Red close button */
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: red;
+  cursor: pointer;
+}
+
+/* Save/Create button (blue) */
+.save-btn {
+  background-color: #635fc7;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* Delete button (red) */
+.delete-btn {
+  background-color: #ea5555;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dark-theme {
+  background-color: #20212c;
+  color: #ffffff;
+}
+
+.light-theme {
+  background-color: #f4f7fd;
+  color: #000000;
+}
+
+/* ===== Modal Backdrop ===== */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: flex-start; /* For Add modal to appear under button */
+  padding-top: 80px; /* space from top */
+}
+
+/* ===== Modal Box ===== */
+.modal-box {
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+/* Dark/Light modal variants */
+.modal-box.dark-theme-modal {
+  background-color: #2b2c37;
+  color: #ffffff;
+}
+
+.modal-box.light-theme-modal {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* ===== Modal Heading ===== */
+.modal-box h2, .modal-box h3 {
+  margin: 0 0 16px 0;
+}
+
+/* ===== Close Button ===== */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+}
+
+/* ===== Inputs & Select ===== */
+.modal-box input[type="text"],
+.modal-box textarea,
+.modal-box select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* ===== Modal Buttons ===== */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-btn,
+.create-btn {
+  background-color: #635fc7;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #ea5555;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* ===== Confirmation Modal ===== */
+#confirm-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1100;
+  justify-content: center;
+  align-items: center;
+}
+
+#confirm-backdrop .modal-window {
+  width: 90%;
+  max-width: 400px;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-theme #confirm-backdrop .modal-window {
+  background-color: #2b2c37;
+  color: #fff;
+}
+
+.modal-window .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-window .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ===== Add Button Positioning ===== */
+.add-task-btn {
+  margin: 16px;
+  padding: 8px 16px;
+  background-color: #635fc7;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* ===== Task Cards ===== */
+.task-card {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .task-card {
+  background-color: #2b2c37;
+  color: #fff;
+}
+
 
 /* Header */
 .modal-header {

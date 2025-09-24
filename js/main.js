@@ -2,14 +2,29 @@
 // main.js - Kanban Task Manager
 // ===============================
 
-// ===== Global State =====
 let tasks = [];
 let currentTaskId = null;
 
 // ===== DOM Elements =====
 const DOM = {
-  loadingMessage: document.getElementById("loading-message"),
-  errorMessage: document.getElementById("error-message"),
+  // Modals
+  modalBackdrop: document.getElementById("modal-backdrop"),
+  modalHeading: document.getElementById("modal-heading"),
+  taskTitle: document.getElementById("task-title"),
+  taskDesc: document.getElementById("task-desc"),
+  taskStatus: document.getElementById("task-status"),
+  createTaskBtn: document.getElementById("create-task-btn"),
+  saveTaskBtn: document.getElementById("save-task-btn"),
+  deleteTaskBtn: document.getElementById("delete-task-btn"),
+  openModalBtn: document.getElementById("open-modal-btn"),
+  closeModalBtn: document.querySelector("#modal-backdrop .close-btn"),
+
+  // Delete Confirmation
+  confirmBackdrop: document.getElementById("confirm-backdrop"),
+  confirmDeleteBtn: document.getElementById("confirm-delete"),
+  cancelTaskBtn: document.getElementById("cancelTask"),
+
+  // Task Containers & Counts
   todoContainer: document.getElementById("todo-tasks"),
   doingContainer: document.getElementById("doing-tasks"),
   doneContainer: document.getElementById("done-tasks"),
@@ -17,23 +32,36 @@ const DOM = {
   doingCount: document.getElementById("doing-count"),
   doneCount: document.getElementById("done-count"),
 
-  modalBackdrop: document.getElementById("modal-backdrop"),
-  openModalBtn: document.getElementById("open-modal-btn"),
+  // Loading/Error
+  loadingMessage: document.getElementById("loading-message"),
+  errorMessage: document.getElementById("error-message"),
 
-  confirmBackdrop: document.getElementById("confirm-backdrop"),
-  confirmDeleteBtn: document.getElementById("confirm-delete"),
-  cancelTaskBtn: document.getElementById("cancelTask"),
-
-  // Toggles
+  // Theme Toggle
   themeSwitch: document.getElementById("theme-switch"),
-  sidebar: document.getElementById("side-bar-div"),
-  sidebarToggle: document.getElementById("sidebar-toggle"),
-
   body: document.body,
-  layout: document.getElementById("layout"),
+  modalBox: document.querySelector("#modal-backdrop .modal-box")
 };
 
-// ===== Fetch Tasks =====
+const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+const sidebarIcon = document.getElementById('sidebar-icon');
+const sidebar = document.getElementById('side-bar-div');
+
+let isSidebarHidden = false;
+
+sidebarToggleBtn.addEventListener('click', () => {
+  isSidebarHidden = !isSidebarHidden;
+
+  // Hide/show the sidebar
+  sidebar.style.display = isSidebarHidden ? 'none' : 'flex';
+
+  // Update icon and tooltip
+  sidebarIcon.textContent = isSidebarHidden ? '👀' : '🚫';
+  sidebarToggleBtn.title = isSidebarHidden ? 'Show Sidebar' : 'Hide Sidebar';
+});
+
+
+
+// ===== Fetch Tasks from API =====
 async function fetchTasks() {
   DOM.loadingMessage.style.display = "block";
   DOM.errorMessage.style.display = "none";
@@ -56,154 +84,110 @@ function renderTasks() {
   DOM.doingContainer.innerHTML = "";
   DOM.doneContainer.innerHTML = "";
 
-  let todoCount = 0,
-    doingCount = 0,
-    doneCount = 0;
+  let todo = 0, doing = 0, done = 0;
 
-  tasks.forEach((task) => {
+  tasks.forEach(task => {
     const taskEl = document.createElement("div");
     taskEl.className = "task-card";
     taskEl.textContent = task.title;
 
-    // Open edit modal on click
-    taskEl.addEventListener("click", () => openEditModal(task.id));
+    taskEl.addEventListener("click", () => openModal(true, task));
 
-    if (task.status === "todo") {
-      DOM.todoContainer.appendChild(taskEl);
-      todoCount++;
-    } else if (task.status === "doing") {
-      DOM.doingContainer.appendChild(taskEl);
-      doingCount++;
-    } else if (task.status === "done") {
-      DOM.doneContainer.appendChild(taskEl);
-      doneCount++;
-    }
+    if (task.status === "todo") { DOM.todoContainer.appendChild(taskEl); todo++; }
+    if (task.status === "doing") { DOM.doingContainer.appendChild(taskEl); doing++; }
+    if (task.status === "done") { DOM.doneContainer.appendChild(taskEl); done++; }
   });
 
-  DOM.todoCount.textContent = todoCount;
-  DOM.doingCount.textContent = doingCount;
-  DOM.doneCount.textContent = doneCount;
+  DOM.todoCount.textContent = todo;
+  DOM.doingCount.textContent = doing;
+  DOM.doneCount.textContent = done;
 }
 
-// ===== Modal Helpers =====
-function closeModal() {
+// ===== Open Modal =====
+function openModal(isEdit, task = null) {
+  DOM.modalBackdrop.style.display = "flex";
+
+  if (isEdit && task) {
+    DOM.modalHeading.textContent = "Task";
+    DOM.taskTitle.value = task.title;
+    DOM.taskDesc.value = task.description || "";
+    DOM.taskStatus.value = task.status;
+    DOM.createTaskBtn.style.display = "none";
+    DOM.saveTaskBtn.style.display = "inline-block";
+    DOM.deleteTaskBtn.style.display = "inline-block";
+    currentTaskId = task.id;
+  } else {
+    DOM.modalHeading.textContent = "Add New Task";
+    DOM.taskTitle.value = "";
+    DOM.taskDesc.value = "";
+    DOM.taskStatus.value = "todo";
+    DOM.createTaskBtn.style.display = "inline-block";
+    DOM.saveTaskBtn.style.display = "none";
+    DOM.deleteTaskBtn.style.display = "none";
+    currentTaskId = null;
+  }
+
+  // Apply current theme to modal
+  const isDark = DOM.themeSwitch.checked;
+  applyModalTheme(isDark);
+}
+
+// ===== Close Modal =====
+DOM.closeModalBtn.addEventListener("click", () => DOM.modalBackdrop.style.display = "none");
+
+// ===== Create Task =====
+DOM.createTaskBtn.addEventListener("click", () => {
+  const newTask = {
+    id: Date.now().toString(),
+    title: DOM.taskTitle.value,
+    description: DOM.taskDesc.value,
+    status: DOM.taskStatus.value,
+  };
+  tasks.push(newTask);
+  renderTasks();
   DOM.modalBackdrop.style.display = "none";
-  DOM.modalBackdrop.innerHTML = ""; // clear modal content
-}
+});
 
-// ===== Add Task Modal =====
-function openAddModal() {
-  DOM.modalBackdrop.style.display = "flex";
+// ===== Save Task Changes =====
+DOM.saveTaskBtn.addEventListener("click", () => {
+  tasks = tasks.map(t => t.id === currentTaskId ? {
+    ...t,
+    title: DOM.taskTitle.value,
+    description: DOM.taskDesc.value,
+    status: DOM.taskStatus.value
+  } : t);
+  renderTasks();
+  DOM.modalBackdrop.style.display = "none";
+});
 
-  const modalContent = `
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Add New Task</h2>
-        <button class="close-modal-btn" id="close-add-modal">✖</button>
-      </div>
-      <form id="add-task-form">
-        <label>Title</label>
-        <input type="text" id="new-task-title" required />
+// ===== Delete Task with Confirmation =====
+DOM.deleteTaskBtn.addEventListener("click", () => {
+  DOM.confirmBackdrop.style.display = "flex";
+});
 
-        <label>Description</label>
-        <textarea id="new-task-desc"></textarea>
+DOM.confirmDeleteBtn.addEventListener("click", () => {
+  tasks = tasks.filter(t => t.id !== currentTaskId);
+  renderTasks();
+  DOM.confirmBackdrop.style.display = "none";
+  DOM.modalBackdrop.style.display = "none";
+});
 
-        <label>Status</label>
-        <select id="new-task-status">
-          <option value="todo">To Do</option>
-          <option value="doing">Doing</option>
-          <option value="done">Done</option>
-        </select>
+DOM.cancelTaskBtn.addEventListener("click", () => DOM.confirmBackdrop.style.display = "none");
 
-        <div class="modal-actions">
-          <button type="submit" class="save-btn">Create Task</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  DOM.modalBackdrop.innerHTML = modalContent;
-
-  // Close
-  document.getElementById("close-add-modal").addEventListener("click", closeModal);
-
-  // Create Task
-  document.getElementById("add-task-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const newTask = {
-      id: Date.now().toString(),
-      title: document.getElementById("new-task-title").value.trim(),
-      description: document.getElementById("new-task-desc").value.trim(),
-      status: document.getElementById("new-task-status").value,
-    };
-    tasks.push(newTask);
-    renderTasks();
-    closeModal();
-  });
-}
-
-// ===== Edit Task Modal =====
-function openEditModal(taskId) {
-  const task = tasks.find((t) => t.id == taskId);
-  if (!task) return;
-  currentTaskId = taskId;
-
-  DOM.modalBackdrop.style.display = "flex";
-
-  const modalContent = `
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Task</h2>
-        <button class="close-modal-btn" id="close-edit-modal">✖</button>
-      </div>
-      <form id="edit-task-form">
-        <label>Title</label>
-        <input type="text" id="edit-task-title" value="${task.title}" required />
-
-        <label>Description</label>
-        <textarea id="edit-task-desc">${task.description || ""}</textarea>
-
-        <label>Status</label>
-        <select id="edit-task-status">
-          <option value="todo" ${task.status === "todo" ? "selected" : ""}>To Do</option>
-          <option value="doing" ${task.status === "doing" ? "selected" : ""}>Doing</option>
-          <option value="done" ${task.status === "done" ? "selected" : ""}>Done</option>
-        </select>
-
-        <div class="modal-actions">
-          <button type="submit" class="save-btn">Save Changes</button>
-          <button type="button" class="delete-btn" id="delete-task-btn">Delete Task</button>
-        </div>
-      </form>
-    </div>
-  `;
-
-  DOM.modalBackdrop.innerHTML = modalContent;
-
-  // Close modal
-  document.getElementById("close-edit-modal").addEventListener("click", closeModal);
-
-  // Save
-  document.getElementById("edit-task-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    task.title = document.getElementById("edit-task-title").value.trim();
-    task.description = document.getElementById("edit-task-desc").value.trim();
-    task.status = document.getElementById("edit-task-status").value;
-    renderTasks();
-    closeModal();
-  });
-
-  // Delete (with confirmation)
-  document.getElementById("delete-task-btn").addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete this task?")) {
-      tasks = tasks.filter((t) => t.id != taskId);
-      renderTasks();
-      closeModal();
-    }
-  });
-}
+// ===== Open Add Task Modal =====
+DOM.openModalBtn.addEventListener("click", () => openModal(false));
 
 // ===== Theme Toggle =====
+function applyModalTheme(isDark) {
+  if (isDark) {
+    DOM.modalBox.classList.add("dark-theme-modal");
+    DOM.modalBox.classList.remove("light-theme-modal");
+  } else {
+    DOM.modalBox.classList.add("light-theme-modal");
+    DOM.modalBox.classList.remove("dark-theme-modal");
+  }
+}
+
 function applyTheme(isDark) {
   if (isDark) {
     DOM.body.classList.add("dark-theme");
@@ -212,8 +196,10 @@ function applyTheme(isDark) {
     DOM.body.classList.add("light-theme");
     DOM.body.classList.remove("dark-theme");
   }
+  applyModalTheme(isDark);
 }
 
+// Load saved theme
 document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme");
   const isDark = savedTheme === "dark-theme";
@@ -221,20 +207,12 @@ document.addEventListener("DOMContentLoaded", () => {
   applyTheme(isDark);
 });
 
+// Toggle listener
 DOM.themeSwitch.addEventListener("change", () => {
   const isDark = DOM.themeSwitch.checked;
   applyTheme(isDark);
   localStorage.setItem("theme", isDark ? "dark-theme" : "light-theme");
 });
-
-// ===== Sidebar Toggle =====
-DOM.sidebarToggle.addEventListener("click", () => {
-  DOM.sidebar.classList.toggle("hidden");
-  DOM.layout.classList.toggle("full-width");
-});
-
-// ===== Modal Open =====
-DOM.openModalBtn.addEventListener("click", openAddModal);
 
 // ===== Init =====
 fetchTasks();
