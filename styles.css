@@ -299,6 +299,7 @@ body.dark-theme .column-div {
   border: 1px solid #444;
 }
 
+
 /* Light mode (default) */
 .task-div, 
 .task-card {
@@ -332,6 +333,16 @@ body.dark-theme #logo {
   content: url("assets/logo-dark.svg");
 }
 
+/* Default header title color (Light Mode) */
+header h2 {
+  color: #111; /* dark text for light mode */
+  transition: color 0.3s ease; /* smooth color change */
+}
+
+/* Dark Mode header title color */
+body.dark-theme header h2 {
+  color: #f5f5f5; /* light text for dark mode */
+}
 
 /* === Theme Toggle Button === */
 .theme-btn {
@@ -1283,6 +1294,142 @@ form select {
   margin: 5px 0;
   padding: 10px;
   border-radius: 5px;
+}
+
+/* ==========================
+   Dark Mode Responsive for Mobile
+========================== */
+
+/* Ensure body, sidebar, header, tasks, modal all respond to dark theme */
+body.dark-theme {
+  background-color: #1e1e2f;
+  color: #ffffff;
+}
+
+body.dark-theme header {
+  background-color: #2c2c3e;
+  color: #ffffff;
+}
+
+body.dark-theme .side-bar {
+  background-color: #2c2c3e;
+  color: #ffffff;
+}
+
+body.dark-theme .task-card,
+body.dark-theme .task-div {
+  background-color: #2b2c37;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark-theme .modal,
+body.dark-theme #task-modal,
+body.dark-theme .modal-box,
+body.dark-theme #confirm-backdrop .modal-window {
+  background-color: #2b2c37;
+  color: #ffffff;
+}
+
+/* ==========================
+   Add Task Button Mobile Fix
+========================== */
+#open-modal-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #635fc7;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+#open-modal-btn:hover {
+  background-color: #5a55c2;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  #open-modal-btn {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #open-modal-btn span {
+    display: none; /* hide text */
+  }
+
+  #open-modal-btn::before {
+    content: "+";
+    display: block;
+    font-weight: bold;
+  }
+}
+
+/* Optional: move button slightly above for mobile if needed */
+@media (max-width: 360px) {
+  #open-modal-btn {
+    top: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+}
+
+/* ==========================
+   Add Task Button in Header - Mobile
+========================== */
+@media (max-width: 768px) {
+  #open-modal-btn {
+    position: absolute; /* inside header */
+    top: 50%;           /* vertically center in header */
+    right: 16px;        /* spacing from right edge */
+    transform: translateY(-50%); /* center perfectly */
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  #open-modal-btn span {
+    display: none; /* hide text */
+  }
+
+  #open-modal-btn::before {
+    content: "+";
+    display: block;
+    font-weight: bold;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  #open-modal-btn {
+    top: 50%;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
 }
 
 /* Add Task Button Positioned Top Right */
