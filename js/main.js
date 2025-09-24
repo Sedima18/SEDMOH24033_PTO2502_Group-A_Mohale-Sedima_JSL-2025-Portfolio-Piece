@@ -17,12 +17,7 @@ const DOM = {
   doingCount: document.getElementById("doing-count"),
   doneCount: document.getElementById("done-count"),
 
-  // Modals
   modalBackdrop: document.getElementById("modal-backdrop"),
-  taskForm: document.getElementById("task-form"),
-  taskTitle: document.getElementById("task-title"),
-  taskDesc: document.getElementById("task-desc"),
-  taskStatus: document.getElementById("task-status"),
   openModalBtn: document.getElementById("open-modal-btn"),
 
   confirmBackdrop: document.getElementById("confirm-backdrop"),
@@ -70,7 +65,7 @@ function renderTasks() {
     taskEl.className = "task-card";
     taskEl.textContent = task.title;
 
-    // Click task title to open edit modal
+    // Open edit modal on click
     taskEl.addEventListener("click", () => openEditModal(task.id));
 
     if (task.status === "todo") {
@@ -90,85 +85,123 @@ function renderTasks() {
   DOM.doneCount.textContent = doneCount;
 }
 
-// ===== Open Add/Edit Modal =====
-function openModal(edit = false) {
-  DOM.modalBackdrop.style.display = "flex";
-  if (!edit) {
-    DOM.taskForm.reset();
-    currentTaskId = null;
-  }
-}
-
+// ===== Modal Helpers =====
 function closeModal() {
   DOM.modalBackdrop.style.display = "none";
+  DOM.modalBackdrop.innerHTML = ""; // clear modal content
 }
 
-// ===== Open Edit Modal =====
+// ===== Add Task Modal =====
+function openAddModal() {
+  DOM.modalBackdrop.style.display = "flex";
+
+  const modalContent = `
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Add New Task</h2>
+        <button class="close-modal-btn" id="close-add-modal">✖</button>
+      </div>
+      <form id="add-task-form">
+        <label>Title</label>
+        <input type="text" id="new-task-title" required />
+
+        <label>Description</label>
+        <textarea id="new-task-desc"></textarea>
+
+        <label>Status</label>
+        <select id="new-task-status">
+          <option value="todo">To Do</option>
+          <option value="doing">Doing</option>
+          <option value="done">Done</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Create Task</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  DOM.modalBackdrop.innerHTML = modalContent;
+
+  // Close
+  document.getElementById("close-add-modal").addEventListener("click", closeModal);
+
+  // Create Task
+  document.getElementById("add-task-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const newTask = {
+      id: Date.now().toString(),
+      title: document.getElementById("new-task-title").value.trim(),
+      description: document.getElementById("new-task-desc").value.trim(),
+      status: document.getElementById("new-task-status").value,
+    };
+    tasks.push(newTask);
+    renderTasks();
+    closeModal();
+  });
+}
+
+// ===== Edit Task Modal =====
 function openEditModal(taskId) {
   const task = tasks.find((t) => t.id == taskId);
   if (!task) return;
   currentTaskId = taskId;
 
-  DOM.taskTitle.value = task.title;
-  DOM.taskDesc.value = task.description;
-  DOM.taskStatus.value = task.status;
+  DOM.modalBackdrop.style.display = "flex";
 
-  openModal(true);
+  const modalContent = `
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Task</h2>
+        <button class="close-modal-btn" id="close-edit-modal">✖</button>
+      </div>
+      <form id="edit-task-form">
+        <label>Title</label>
+        <input type="text" id="edit-task-title" value="${task.title}" required />
 
-  // Remove old delete button if exists
-  const existingBtn = document.getElementById("modal-delete-btn");
-  if (existingBtn) existingBtn.remove();
+        <label>Description</label>
+        <textarea id="edit-task-desc">${task.description || ""}</textarea>
 
-  // Add delete button inside modal
-  const deleteBtn = document.createElement("button");
-  deleteBtn.id = "modal-delete-btn";
-  deleteBtn.textContent = "Delete Task 🗑️";
-  deleteBtn.type = "button";
-  deleteBtn.addEventListener("click", () => confirmDeleteModal(taskId));
-  DOM.taskForm.appendChild(deleteBtn);
+        <label>Status</label>
+        <select id="edit-task-status">
+          <option value="todo" ${task.status === "todo" ? "selected" : ""}>To Do</option>
+          <option value="doing" ${task.status === "doing" ? "selected" : ""}>Doing</option>
+          <option value="done" ${task.status === "done" ? "selected" : ""}>Done</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Save Changes</button>
+          <button type="button" class="delete-btn" id="delete-task-btn">Delete Task</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  DOM.modalBackdrop.innerHTML = modalContent;
+
+  // Close modal
+  document.getElementById("close-edit-modal").addEventListener("click", closeModal);
+
+  // Save
+  document.getElementById("edit-task-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    task.title = document.getElementById("edit-task-title").value.trim();
+    task.description = document.getElementById("edit-task-desc").value.trim();
+    task.status = document.getElementById("edit-task-status").value;
+    renderTasks();
+    closeModal();
+  });
+
+  // Delete (with confirmation)
+  document.getElementById("delete-task-btn").addEventListener("click", () => {
+    if (confirm("Are you sure you want to delete this task?")) {
+      tasks = tasks.filter((t) => t.id != taskId);
+      renderTasks();
+      closeModal();
+    }
+  });
 }
-
-// ===== Delete Confirmation =====
-function confirmDeleteModal(taskId) {
-  currentTaskId = taskId;
-  DOM.confirmBackdrop.style.display = "flex";
-}
-
-function closeConfirm() {
-  DOM.confirmBackdrop.style.display = "none";
-}
-
-// Confirm Delete
-DOM.confirmDeleteBtn.addEventListener("click", () => {
-  tasks = tasks.filter((t) => t.id != currentTaskId);
-  renderTasks();
-  closeConfirm();
-  closeModal();
-});
-
-// Cancel Delete
-DOM.cancelTaskBtn.addEventListener("click", closeConfirm);
-
-// ===== Handle Save / Add Task =====
-DOM.taskForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const newTask = {
-    id: currentTaskId || Date.now().toString(),
-    title: DOM.taskTitle.value,
-    description: DOM.taskDesc.value,
-    status: DOM.taskStatus.value,
-  };
-
-  if (currentTaskId) {
-    tasks = tasks.map((t) => (t.id == currentTaskId ? newTask : t));
-  } else {
-    tasks.push(newTask);
-  }
-
-  renderTasks();
-  closeModal();
-});
 
 // ===== Theme Toggle =====
 function applyTheme(isDark) {
@@ -200,15 +233,8 @@ DOM.sidebarToggle.addEventListener("click", () => {
   DOM.layout.classList.toggle("full-width");
 });
 
-
-// ===== Modal Open / Close =====
-DOM.openModalBtn.addEventListener("click", () => openModal(false));
-document.querySelectorAll(".close-btn").forEach((btn) =>
-  btn.addEventListener("click", () => {
-    closeModal();
-    closeConfirm();
-  })
-);
+// ===== Modal Open =====
+DOM.openModalBtn.addEventListener("click", openAddModal);
 
 // ===== Init =====
 fetchTasks();

@@ -815,6 +815,27 @@ dialog {
   border-radius: 6px;
 }
 
+/* Close button (X) for modals */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 22px;
+  font-weight: bold;
+  color: red;          /* default red color */
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.close-btn:hover {
+  color: darkred;      /* darker red on hover */
+  transform: scale(1.1);
+  transition: 0.2s ease;
+}
+
+
 /* Responsive adjustments to modal size */
 @media (max-width: 600px) {
   .modal-window {
@@ -885,6 +906,46 @@ textarea {
   background-color: var(--danger-pressed);
   transform: translateY(0);
 }
+
+.task-input {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-btn {
+  background: #007bff; /* Blue */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #0056b3;
+}
+
+.delete-btn {
+  background: #dc3545; /* Red */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #a71d2a;
+}
+
 
 /* Accessible keyboard focus (use focus-visible so mouse clicks don't show it) */
 .delete-button:focus-visible {
