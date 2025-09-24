@@ -815,27 +815,6 @@ dialog {
   border-radius: 6px;
 }
 
-/* Close button (X) for modals */
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 22px;
-  font-weight: bold;
-  color: red;          /* default red color */
-  cursor: pointer;
-  background: none;
-  border: none;
-  outline: none;
-}
-
-.close-btn:hover {
-  color: darkred;      /* darker red on hover */
-  transform: scale(1.1);
-  transition: 0.2s ease;
-}
-
-
 /* Responsive adjustments to modal size */
 @media (max-width: 600px) {
   .modal-window {
