@@ -299,6 +299,40 @@ body.dark-theme .column-div {
   border: 1px solid #444;
 }
 
+/* Light mode (default) */
+.task-div, 
+.task-card {
+  background-color: #ffffff; /* light background */
+  color: #000000;           /* dark text */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode override */
+body.dark-theme .task-div, 
+body.dark-theme .task-card {
+  background-color: #2b2c37; /* dark gray background */
+  color: #ffffff;           /* light text */
+  border: 1px solid #444;   /* softer border */
+}
+
+
+/* Default (Light Mode) Logo */
+#logo {
+  content: url("assets/logo-light.svg");
+  width: 150px; /* adjust to your layout */
+  height: auto;
+}
+
+/* Dark Mode Logo */
+body.dark-theme #logo {
+  content: url("assets/logo-dark.svg");
+}
+
+
 /* === Theme Toggle Button === */
 .theme-btn {
   position: fixed;
@@ -354,6 +388,7 @@ body.dark-theme .sidebar {
   background: #222;
   color: #fff;
 }
+
 
 /* === Theme Toggle Button === */
 .theme-btn {
