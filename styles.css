@@ -723,6 +723,9 @@ body.dark-theme {
   color: #fff;
 }
 
+.task-priority.high { color: #fff; background: red; }
+.task-priority.medium { color: #000; background: yellow; }
+.task-priority.low { color: #fff; background: green; }
 /* Red close button */
 .close-btn {
   background: transparent;
