@@ -1,6 +1,14 @@
 // ===============================
-// main.js - Kanban Task Manager
+// main.js - Kanban Task Manager (logo sidebar + theme + mobile header hide + JSDoc)
 // ===============================
+
+/**
+ * @typedef {Object} Task
+ * @property {string} id
+ * @property {string} title
+ * @property {string} description
+ * @property {"todo"|"doing"|"done"} status
+ */
 
 let tasks = [];
 let currentTaskId = null;
@@ -41,21 +49,40 @@ document.addEventListener("DOMContentLoaded", () => {
     themeSwitch: document.getElementById("theme-switch"),
     body: document.body,
     modalBox: document.querySelector("#modal-backdrop .modal-box"),
+
+    // Sidebar + logos
+    sidebar: document.getElementById("side-bar-div"),
+    sidebarToggleBtn: document.getElementById("sidebar-toggle"),
+    sidebarIcon: document.getElementById("sidebar-icon"),
+    // logo in the sidebar
+    kanbanLogo: document.getElementById("logo"),
+    // header mobile logo (no id in your HTML — class is used)
+    headerLogo: document.querySelector(".logo-mobile"),
+    // header board name (to hide on mobile)
+    headerBoardName: document.getElementById("header-board-name"),
   };
 
-  // Sidebar elements
-  const sidebarToggleBtn = document.getElementById("sidebar-toggle");
-  const sidebar = document.getElementById("side-bar-div");
-  const sidebarIcon = document.getElementById("sidebar-icon");
-
   /* =========================
-     Sidebar Functions
+     Sidebar & Header helpers
      ========================= */
 
-  function updateToggleUI(isOpen, mode) {
-    if (sidebarToggleBtn) {
-      sidebarToggleBtn.setAttribute("aria-expanded", String(Boolean(isOpen)));
-      sidebarToggleBtn.title =
+  /**
+   * Returns true for mobile viewport (<= 768px)
+   * @returns {boolean}
+   */
+  function isMobileView() {
+    return window.innerWidth <= 768;
+  }
+
+  /**
+   * Update sidebar toggle UI (icon/title/aria-expanded).
+   * @param {boolean} isOpen
+   * @param {"mobile"|"desktop"} [mode]
+   */
+  function updateToggleUI(isOpen, mode = "desktop") {
+    if (DOM.sidebarToggleBtn) {
+      DOM.sidebarToggleBtn.setAttribute("aria-expanded", String(Boolean(isOpen)));
+      DOM.sidebarToggleBtn.title =
         mode === "mobile"
           ? isOpen
             ? "Close Sidebar"
@@ -65,124 +92,176 @@ document.addEventListener("DOMContentLoaded", () => {
           : "Show Sidebar";
     }
 
-    if (sidebarIcon) {
-      if (sidebarIcon.tagName === "IMG") {
-        sidebarIcon.alt = isOpen ? "menu open" : "menu closed";
+    if (DOM.sidebarIcon) {
+      if (DOM.sidebarIcon.tagName === "IMG") {
+        DOM.sidebarIcon.alt = isOpen ? "menu open" : "menu closed";
       } else {
-        sidebarIcon.textContent = isOpen ? "🚫" : "👀";
+        DOM.sidebarIcon.textContent = isOpen ? "👀" : "🚫";
       }
     }
   }
 
+  /**
+   * Open sidebar for mobile (slide-in).
+   */
   function openSidebarMobile() {
-    sidebar.classList.add("sidebar-open");
-    sidebar.style.transform = "translateX(0)";
+    if (!DOM.sidebar) return;
+    DOM.sidebar.classList.add("sidebar-open");
+    DOM.sidebar.style.transform = "translateX(0)";
     updateToggleUI(true, "mobile");
   }
 
+  /**
+   * Close sidebar for mobile (slide-out).
+   */
   function closeSidebarMobile() {
-    sidebar.classList.remove("sidebar-open");
-    sidebar.style.transform = "translateX(-100%)";
+    if (!DOM.sidebar) return;
+    DOM.sidebar.classList.remove("sidebar-open");
+    DOM.sidebar.style.transform = "translateX(-100%)";
     updateToggleUI(false, "mobile");
   }
 
+  /**
+   * Show sidebar in desktop mode.
+   */
   function showSidebarDesktop() {
-    sidebar.style.display = "";
-    sidebar.style.transform = "";
+    if (!DOM.sidebar) return;
+    DOM.sidebar.style.display = "";
+    DOM.sidebar.style.transform = "";
     updateToggleUI(true, "desktop");
-    sidebar.dataset.hidden = "false";
+    DOM.sidebar.dataset.hidden = "false";
   }
 
+  /**
+   * Hide sidebar in desktop mode.
+   */
   function hideSidebarDesktop() {
-    sidebar.style.display = "none";
-    sidebar.style.transform = "";
+    if (!DOM.sidebar) return;
+    DOM.sidebar.style.display = "none";
+    DOM.sidebar.style.transform = "";
     updateToggleUI(false, "desktop");
-    sidebar.dataset.hidden = "true";
+    DOM.sidebar.dataset.hidden = "true";
   }
 
-  function isMobileView() {
-    return window.innerWidth <= 768;
-  }
+  /**
+   * Toggle sidebar based on viewport.
+   */
+  function toggleSidebar() {
+    if (!DOM.sidebar) return;
 
-  function initSidebarState() {
-    if (!sidebar || !sidebarToggleBtn) return;
     if (isMobileView()) {
-      if (!sidebar.classList.contains("sidebar-open")) {
-        sidebar.style.transform = "translateX(-100%)";
+      const open = DOM.sidebar.classList.contains("sidebar-open");
+      open ? closeSidebarMobile() : openSidebarMobile();
+    } else {
+      const hidden =
+        DOM.sidebar.style.display === "none" || DOM.sidebar.dataset.hidden === "true";
+      hidden ? showSidebarDesktop() : hideSidebarDesktop();
+    }
+  }
+
+  /**
+   * Hide the "Launch Career" header in mobile view and show in desktop.
+   */
+  function updateHeaderBoardVisibility() {
+    if (!DOM.headerBoardName) return;
+    if (isMobileView()) {
+      DOM.headerBoardName.style.display = "none";
+    } else {
+      DOM.headerBoardName.style.display = "";
+    }
+  }
+
+  // Initialize sidebar state and header visibility
+  function initSidebarState() {
+    if (!DOM.sidebar || !DOM.sidebarToggleBtn) return;
+    if (isMobileView()) {
+      if (!DOM.sidebar.classList.contains("sidebar-open")) {
+        DOM.sidebar.style.transform = "translateX(-100%)";
         updateToggleUI(false, "mobile");
       } else {
         updateToggleUI(true, "mobile");
       }
-      sidebar.style.display = "";
+      DOM.sidebar.style.display = "";
     } else {
-      if (sidebar.dataset.hidden === "true") {
+      if (DOM.sidebar.dataset.hidden === "true") {
         hideSidebarDesktop();
       } else {
         showSidebarDesktop();
       }
     }
+    updateHeaderBoardVisibility();
   }
 
-  function toggleSidebar() {
-    if (!sidebar || !sidebarToggleBtn) return;
-
-    if (isMobileView()) {
-      const open = sidebar.classList.contains("sidebar-open");
-      open ? closeSidebarMobile() : openSidebarMobile();
-    } else {
-      const hidden =
-        sidebar.style.display === "none" || sidebar.dataset.hidden === "true";
-      hidden ? showSidebarDesktop() : hideSidebarDesktop();
-    }
-  }
-
-  if (sidebarToggleBtn && sidebar) {
+  // Attach toggle listeners: desktop button + header logo (mobile)
+  if (DOM.sidebarToggleBtn && DOM.sidebar) {
     initSidebarState();
 
-    sidebarToggleBtn.addEventListener("click", (ev) => {
+    DOM.sidebarToggleBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       toggleSidebar();
     });
 
+    // header logo should toggle sidebar on mobile
+    if (DOM.headerLogo) {
+      DOM.headerLogo.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        toggleSidebar();
+      });
+    }
+
+    // also let sidebar internal logo toggle (optional)
+    if (DOM.kanbanLogo) {
+      DOM.kanbanLogo.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        if (isMobileView()) toggleSidebar();
+      });
+    }
+
+    // close mobile sidebar by clicking outside
     document.addEventListener("click", (event) => {
       if (!isMobileView()) return;
-      if (!sidebar.classList.contains("sidebar-open")) return;
+      if (!DOM.sidebar.classList.contains("sidebar-open")) return;
       if (
-        !sidebar.contains(event.target) &&
-        !sidebarToggleBtn.contains(event.target)
+        !DOM.sidebar.contains(event.target) &&
+        !DOM.sidebarToggleBtn.contains(event.target) &&
+        !(DOM.headerLogo && DOM.headerLogo.contains(event.target))
       ) {
         closeSidebarMobile();
       }
     });
 
+    // close on escape
     document.addEventListener("keydown", (ev) => {
       if (
         ev.key === "Escape" &&
         isMobileView() &&
-        sidebar.classList.contains("sidebar-open")
+        DOM.sidebar.classList.contains("sidebar-open")
       ) {
         closeSidebarMobile();
       }
     });
 
+    // resize handling
     window.addEventListener("resize", () => {
       if (isMobileView()) {
-        if (!sidebar.classList.contains("sidebar-open")) {
-          sidebar.style.transform = "translateX(-100%)";
+        if (!DOM.sidebar.classList.contains("sidebar-open")) {
+          DOM.sidebar.style.transform = "translateX(-100%)";
           updateToggleUI(false, "mobile");
         }
-        sidebar.style.display = "";
+        DOM.sidebar.style.display = "";
       } else {
-        sidebar.classList.remove("sidebar-open");
-        sidebar.style.transform = "";
-        if (sidebar.dataset.hidden === "true") {
-          sidebar.style.display = "none";
+        DOM.sidebar.classList.remove("sidebar-open");
+        DOM.sidebar.style.transform = "";
+        if (DOM.sidebar.dataset.hidden === "true") {
+          DOM.sidebar.style.display = "none";
           updateToggleUI(false, "desktop");
         } else {
-          sidebar.style.display = "";
+          DOM.sidebar.style.display = "";
           updateToggleUI(true, "desktop");
         }
       }
+      // update header visibility on resize
+      updateHeaderBoardVisibility();
     });
   }
 
@@ -192,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Save all tasks to localStorage
-   * @function saveTasksToLocal
+   * @function
    */
   function saveTasksToLocal() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -200,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Load tasks from localStorage
-   * @function loadTasksFromLocal
+   * @function
    */
   function loadTasksFromLocal() {
     const stored = localStorage.getItem("tasks");
@@ -215,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================
-     Task Functions
+     Task Functions (UNCHANGED — preserved exactly as you provided)
      ========================= */
 
   /**
@@ -387,6 +466,10 @@ document.addEventListener("DOMContentLoaded", () => {
      Theme Toggle
      ========================= */
 
+  /**
+   * Apply theme to modal box.
+   * @param {boolean} isDark
+   */
   function applyModalTheme(isDark) {
     if (!DOM.modalBox) return;
     if (isDark) {
@@ -398,6 +481,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  /**
+   * Apply theme to body + modal.
+   * @param {boolean} isDark
+   */
   function applyTheme(isDark) {
     if (isDark) {
       DOM.body.classList.add("dark-theme");
@@ -427,6 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Init App
      ========================= */
+
   loadTasksFromLocal();
   if (tasks.length === 0) {
     // if no tasks saved locally, fetch from API
