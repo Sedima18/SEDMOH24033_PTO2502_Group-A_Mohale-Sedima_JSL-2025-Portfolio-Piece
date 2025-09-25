@@ -455,4 +455,4 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTasksFromLocal();
   if (tasks.length === 0) fetchTasks();
   else renderTasks();
-});
+})
