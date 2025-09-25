@@ -82,5 +82,4 @@ Mobile: Tap the menu icon to open; tap the backdrop or close icon to hide.
 ## Link for presentation
 
 
-## deplyment link
-https://boisterous-cocada-c6de29.netlify.app/
+## deployment link

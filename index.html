@@ -1,130 +1,129 @@
-<!DOCTYPE html>
-<html lang="en"> 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
-  <script type="module" defer src="./js/main.js"></script>
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon.svg" />
-  <title>Kanban Task Management</title>
-</head>
-<body>
+<head> 
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" /> 
+  <link rel="stylesheet" href="styles.css" /> 
+  <script type="module" defer src="./js/main.js"></script> 
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon.svg" /> 
+  <title>Kanban Task Management</title> 
+</head> 
 
-  <!-- Sidebar -->
-  <nav class="side-bar" id="side-bar-div">
-    <div id="side-logo-div">
-      <img id="logo" src="./assets/logo-light.svg" alt="logo-light" />
-      <!-- Sidebar Toggle -->
-      <button id="sidebar-toggle" class="sidebar-btn" title="Hide Sidebar">
-        <span id="sidebar-icon">🚫</span>
-      </button>
-    </div>
+<body> 
+  <!-- Sidebar --> 
+  <!-- Sidebar Toggle --> 
+  <button id="sidebar-toggle" class="sidebar-btn" title="Hide Sidebar"> 
+    <span id="sidebar-icon">🚫</span> 
+  </button> 
+  </div> 
 
-    <div class="boards-nav-links-div" id="boards-nav-links-div">
-      <h4 id="headline-sidepanel">ALL BOARDS (1)</h4>
-      <button class="board-btn">Launch Career</button>
-      <div class="theme-toggle">
-        <span class="theme-icon" id="light-icon">🌞</span>
-        <label class="switch">
-          <input type="checkbox" id="theme-switch">
-          <span class="slider round"></span>
-        </label>
-        <span class="theme-icon" id="dark-icon">🌑</span>
-      </div>
-    </div>
-  </nav>
+  <nav class="side-bar" id="side-bar-div"> 
+    <div id="side-logo-div"> 
+      <img id="logo" src="./assets/logo-light.svg" alt="logo-light" /> 
+    </div> 
+    <div class="boards-nav-links-div" id="boards-nav-links-div"> 
+      <h4 id="headline-sidepanel">ALL BOARDS (1)</h4> 
+      <button class="board-btn">Launch Career</button> 
+      <div class="theme-toggle"> 
+        <span class="theme-icon" id="light-icon">🌞</span> 
+        <label class="switch"> 
+          <input type="checkbox" id="theme-switch"> 
+          <span class="slider round"></span> 
+        </label> 
+        <span class="theme-icon" id="dark-icon">🌑</span> 
+      </div> 
+    </div> 
+  </nav> 
 
-  <!-- Main layout -->
-  <div id="layout">
-    <header id="header" class="sticky-header">
-      <div class="header-name-div">
-        <img src="./assets/favicon.svg" alt="logo-mobile" class="logo-mobile"/>
-        <h2 class="header-board-name" id="header-board-name">Launch Career</h2>
-      </div>
-    </header>
+  <!-- Main layout --> 
+  <div id="layout"> 
+    <header id="header" class="sticky-header"> 
+      <div class="header-name-div"> 
+        <img src="./assets/favicon.svg" alt="logo-mobile" class="logo-mobile"/> 
+        <h2 class="header-board-name" id="header-board-name">Launch Career</h2> 
+      </div> 
+    </header> 
 
-    <!-- Add Task Button -->
-    <button id="open-modal-btn" class="add-task-btn">
-      <span>+ Add new task</span>
-    </button>
+    <!-- Add Task Button --> 
+    <button id="open-modal-btn" class="add-task-btn"> 
+      <span>+ Add new task</span> 
+    </button> 
 
-    <!-- Loading & Error -->
-    <div id="loading-message" style="margin:6px 0 12px 0;">Loading tasks...</div>
-    <div id="error-message" style="display:none;color:#c0392b;margin:6px 0 12px 0;">Failed to load tasks!</div>
+    <!-- Loading & Error --> 
+    <div id="loading-message" style="margin:6px 0 12px 0;">Loading tasks...</div> 
+    <div id="error-message" style="display:none;color:#c0392b;margin:6px 0 12px 0;">Failed to load tasks!</div> 
 
-    <!-- Add/Edit Task Modal -->
-    <div class="modal-backdrop" id="modal-backdrop" style="display:none;">
-      <div class="modal-box">
-        <div class="modal-header">
-          <h2 id="modal-heading">Add New Task</h2>
-          <button class="close-btn">&times;</button>
-        </div>
-        <form id="task-form">
-          <input type="text" id="task-title" placeholder="Task Title" required>
-          <textarea id="task-desc" placeholder="Task Description"></textarea>
-          <select id="task-status">
-            <option value="todo">To Do</option>
-            <option value="doing">Doing</option>
-            <option value="done">Done</option>
-          </select>
-          <label for="task-priority">Priority</label>
-          <select id="task-priority">
-            <option value="High">High</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="Low">Low</option>
-          </select>
-          <div class="modal-actions">
-            <button type="button" id="create-task-btn" class="save-btn">Create Task</button>
-            <button type="button" id="save-task-btn" class="save-btn">Save Changes</button>
-            <button type="button" id="delete-task-btn" class="delete-btn">Delete Task</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <!-- Add/Edit Task Modal --> 
+    <div class="modal-backdrop" id="modal-backdrop" style="display:none;"> 
+      <div class="modal-box"> 
+        <div class="modal-header"> 
+          <h2 id="modal-heading">Add New Task</h2> 
+          <button class="close-btn">&times;</button> 
+        </div> 
+        <form id="task-form"> 
+          <input type="text" id="task-title" placeholder="Task Title" required> 
+          <textarea id="task-desc" placeholder="Task Description"></textarea> 
+          <select id="task-status"> 
+            <option value="todo">To Do</option> 
+            <option value="doing">Doing</option> 
+            <option value="done">Done</option> 
+          </select> 
+          <label for="task-priority">Priority</label> 
+          <select id="task-priority"> 
+            <option value="High">High</option> 
+            <option value="Medium" selected>Medium</option> 
+            <option value="Low">Low</option> 
+          </select> 
+          <div class="modal-actions"> 
+            <button type="button" id="create-task-btn" class="save-btn">Create Task</button> 
+            <button type="button" id="save-task-btn" class="save-btn">Save Changes</button> 
+            <button type="button" id="delete-task-btn" class="delete-btn">Delete Task</button> 
+          </div> 
+        </form> 
+      </div> 
+    </div> 
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-backdrop" id="confirm-backdrop" style="display:none;">
-      <div class="modal-box">
-        <p>Are you sure you want to delete this task? This action cannot be undone.</p>
-        <div class="modal-actions">
-          <button type="button" id="cancelTask" class="save-btn">Cancel</button>
-          <button type="button" id="confirm-delete" class="delete-btn">Delete</button>
-        </div>
-      </div>
-    </div>
+    <!-- Delete Confirmation Modal --> 
+    <div class="modal-backdrop" id="confirm-backdrop" style="display:none;"> 
+      <div class="modal-box"> 
+        <p>Are you sure you want to delete this task? This action cannot be undone.</p> 
+        <div class="modal-actions"> 
+          <button type="button" id="cancelTask" class="save-btn">Cancel</button> 
+          <button type="button" id="confirm-delete" class="delete-btn">Delete</button> 
+        </div> 
+      </div> 
+    </div> 
 
-    <!-- Board columns -->
-    <div class="container">
-      <main class="card-column-main">
-        <!-- TODO Column -->
-        <section class="column-div" data-status="todo">
-          <div class="column-head-div">
-            <span class="dot" style="background-color:#635fc7;"></span>
-            <h4 class="columnHeader">TODO (<span id="todo-count">0</span>)</h4>
-          </div>
-          <div class="tasks-container" id="todo-tasks"></div>
-        </section>
+    <!-- Board columns --> 
+    <div class="container"> 
+      <main class="card-column-main"> 
+        <!-- TODO Column --> 
+        <section class="column-div" data-status="todo"> 
+          <div class="column-head-div"> 
+            <span class="dot" style="background-color:#635fc7;"></span> 
+            <h4 class="columnHeader">TODO (<span id="todo-count">0</span>)</h4> 
+          </div> 
+          <div class="tasks-container" id="todo-tasks"></div> 
+        </section> 
 
-        <!-- DOING Column -->
-        <section class="column-div" data-status="doing">
-          <div class="column-head-div">
-            <span class="dot" style="background-color:#49C4E5;"></span>
-            <h4 class="columnHeader">DOING (<span id="doing-count">0</span>)</h4>
-          </div>
-          <div class="tasks-container" id="doing-tasks"></div>
-        </section>
+        <!-- DOING Column --> 
+        <section class="column-div" data-status="doing"> 
+          <div class="column-head-div"> 
+            <span class="dot" style="background-color:#49C4E5;"></span> 
+            <h4 class="columnHeader">DOING (<span id="doing-count">0</span>)</h4> 
+          </div> 
+          <div class="tasks-container" id="doing-tasks"></div> 
+        </section> 
 
-        <!-- DONE Column -->
-        <section class="column-div" data-status="done">
-          <div class="column-head-div">
-            <span class="dot" style="background-color:#67E2AE;"></span>
-            <h4 class="columnHeader">DONE (<span id="done-count">0</span>)</h4>
-          </div>
-          <div class="tasks-container" id="done-tasks"></div>
-        </section>
-      </main>
-    </div>
-  </div>
-</body>
+        <!-- DONE Column --> 
+        <section class="column-div" data-status="done"> 
+          <div class="column-head-div"> 
+            <span class="dot" style="background-color:#67E2AE;"></span> 
+            <h4 class="columnHeader">DONE (<span id="done-count">0</span>)</h4> 
+          </div> 
+          <div class="tasks-container" id="done-tasks"></div> 
+        </section> 
+      </main> 
+    </div> 
+  </div> 
+</body> 
 </html>

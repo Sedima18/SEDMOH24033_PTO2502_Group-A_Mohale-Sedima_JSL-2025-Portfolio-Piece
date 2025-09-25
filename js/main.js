@@ -70,17 +70,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateToggleUI(isOpen, mode = "desktop") {
-    if (DOM.sidebarToggleBtn) {
-      DOM.sidebarToggleBtn.setAttribute("aria-expanded", String(Boolean(isOpen)));
-      DOM.sidebarToggleBtn.title =
-        mode === "mobile"
-          ? isOpen
-            ? "Close Sidebar"
-            : "Open Sidebar"
-          : isOpen
-          ? "Hide Sidebar"
-          : "Show Sidebar";
-    }
+    if (!DOM.sidebarToggleBtn) return;
+
+    DOM.sidebarToggleBtn.setAttribute("aria-expanded", String(Boolean(isOpen)));
+    DOM.sidebarToggleBtn.title =
+      mode === "mobile"
+        ? isOpen
+          ? "Close Sidebar"
+          : "Open Sidebar"
+        : isOpen
+        ? "Hide Sidebar"
+        : "Show Sidebar";
 
     if (DOM.sidebarIcon) {
       if (DOM.sidebarIcon.tagName === "IMG") {
@@ -92,45 +92,36 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openSidebarMobile() {
-    if (!DOM.sidebar) return;
     DOM.sidebar.classList.add("sidebar-open");
     DOM.sidebar.style.transform = "translateX(0)";
     updateToggleUI(true, "mobile");
   }
 
   function closeSidebarMobile() {
-    if (!DOM.sidebar) return;
     DOM.sidebar.classList.remove("sidebar-open");
     DOM.sidebar.style.transform = "translateX(-100%)";
     updateToggleUI(false, "mobile");
   }
 
   function showSidebarDesktop() {
-    if (!DOM.sidebar) return;
-    DOM.sidebar.style.display = "";
-    DOM.sidebar.style.transform = "";
-    updateToggleUI(true, "desktop");
+    DOM.sidebar.style.display = "block";
     DOM.sidebar.dataset.hidden = "false";
+    updateToggleUI(true, "desktop");
   }
 
   function hideSidebarDesktop() {
-    if (!DOM.sidebar) return;
     DOM.sidebar.style.display = "none";
-    DOM.sidebar.style.transform = "";
-    updateToggleUI(false, "desktop");
     DOM.sidebar.dataset.hidden = "true";
+    updateToggleUI(false, "desktop");
   }
 
   function toggleSidebar() {
-    if (!DOM.sidebar) return;
-
     if (isMobileView()) {
-      const open = DOM.sidebar.classList.contains("sidebar-open");
-      open ? closeSidebarMobile() : openSidebarMobile();
+      DOM.sidebar.classList.contains("sidebar-open")
+        ? closeSidebarMobile()
+        : openSidebarMobile();
     } else {
-      const hidden =
-        DOM.sidebar.style.display === "none" || DOM.sidebar.dataset.hidden === "true";
-      hidden ? showSidebarDesktop() : hideSidebarDesktop();
+      DOM.sidebar.dataset.hidden === "true" ? showSidebarDesktop() : hideSidebarDesktop();
     }
   }
 
@@ -141,26 +132,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initSidebarState() {
     if (!DOM.sidebar || !DOM.sidebarToggleBtn) return;
+
     if (isMobileView()) {
-      if (!DOM.sidebar.classList.contains("sidebar-open")) {
-        DOM.sidebar.style.transform = "translateX(-100%)";
-        updateToggleUI(false, "mobile");
-      } else {
-        updateToggleUI(true, "mobile");
-      }
-      DOM.sidebar.style.display = "";
+      DOM.sidebar.style.transform = DOM.sidebar.classList.contains("sidebar-open")
+        ? "translateX(0)"
+        : "translateX(-100%)";
+      DOM.sidebar.style.display = "block";
+      updateToggleUI(DOM.sidebar.classList.contains("sidebar-open"), "mobile");
     } else {
-      if (DOM.sidebar.dataset.hidden === "true") {
-        hideSidebarDesktop();
-      } else {
-        showSidebarDesktop();
-      }
+      if (DOM.sidebar.dataset.hidden === "true") hideSidebarDesktop();
+      else showSidebarDesktop();
     }
+
     updateHeaderBoardVisibility();
   }
 
   if (DOM.sidebarToggleBtn && DOM.sidebar) {
     initSidebarState();
+
     DOM.sidebarToggleBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       toggleSidebar();
@@ -203,24 +192,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.addEventListener("resize", () => {
-      if (isMobileView()) {
-        if (!DOM.sidebar.classList.contains("sidebar-open")) {
-          DOM.sidebar.style.transform = "translateX(-100%)";
-          updateToggleUI(false, "mobile");
-        }
-        DOM.sidebar.style.display = "";
-      } else {
-        DOM.sidebar.classList.remove("sidebar-open");
-        DOM.sidebar.style.transform = "";
-        if (DOM.sidebar.dataset.hidden === "true") {
-          DOM.sidebar.style.display = "none";
-          updateToggleUI(false, "desktop");
-        } else {
-          DOM.sidebar.style.display = "";
-          updateToggleUI(true, "desktop");
-        }
-      }
-      updateHeaderBoardVisibility();
+      initSidebarState();
     });
   }
 
