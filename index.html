@@ -1,4 +1,5 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en"> 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,15 +12,15 @@
 <body>
 
   <!-- Sidebar -->
+  <nav class="side-bar" id="side-bar-div">
+    <div id="side-logo-div">
+      <img id="logo" src="./assets/logo-light.svg" alt="logo-light" />
       <!-- Sidebar Toggle -->
       <button id="sidebar-toggle" class="sidebar-btn" title="Hide Sidebar">
         <span id="sidebar-icon">🚫</span>
       </button>
     </div>
-  <nav class="side-bar" id="side-bar-div">
-    <div id="side-logo-div">
-      <img id="logo" src="./assets/logo-light.svg" alt="logo-light" />
-    </div>
+
     <div class="boards-nav-links-div" id="boards-nav-links-div">
       <h4 id="headline-sidepanel">ALL BOARDS (1)</h4>
       <button class="board-btn">Launch Career</button>
@@ -32,10 +33,9 @@
         <span class="theme-icon" id="dark-icon">🌑</span>
       </div>
     </div>
-   </nav>
+  </nav>
 
-
-      <!-- Main layout -->
+  <!-- Main layout -->
   <div id="layout">
     <header id="header" class="sticky-header">
       <div class="header-name-div">
@@ -43,7 +43,6 @@
         <h2 class="header-board-name" id="header-board-name">Launch Career</h2>
       </div>
     </header>
-
 
     <!-- Add Task Button -->
     <button id="open-modal-btn" class="add-task-btn">
@@ -71,10 +70,10 @@
           </select>
           <label for="task-priority">Priority</label>
           <select id="task-priority">
-          <option value="High">High</option>
-          <option value="Medium" selected>Medium</option>
-        <option value="Low">Low</option>
-        </select>
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
           <div class="modal-actions">
             <button type="button" id="create-task-btn" class="save-btn">Create Task</button>
             <button type="button" id="save-task-btn" class="save-btn">Save Changes</button>
