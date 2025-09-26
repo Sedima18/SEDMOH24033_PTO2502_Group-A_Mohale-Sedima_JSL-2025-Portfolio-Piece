@@ -1,5 +1,5 @@
 // ===============================
-// main.js - Kanban Task Manager (logo sidebar + theme + mobile header hide + priority dots + localStorage)
+// main.js - Kanban Task Manager (original + mobile sidebar modal)
 // ===============================
 
 /**
@@ -62,77 +62,70 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* =========================
-     Sidebar & Header helpers
+     Helpers
      ========================= */
-
   function isMobileView() {
     return window.innerWidth <= 768;
   }
 
-  function updateToggleUI(isOpen, mode = "desktop") {
-    if (!DOM.sidebarToggleBtn) return;
-
-    DOM.sidebarToggleBtn.setAttribute("aria-expanded", String(Boolean(isOpen)));
-    DOM.sidebarToggleBtn.title =
-      mode === "mobile"
-        ? isOpen
-          ? "Close Sidebar"
-          : "Open Sidebar"
-        : isOpen
-        ? "Hide Sidebar"
-        : "Show Sidebar";
-
-    if (DOM.sidebarIcon) {
-      if (DOM.sidebarIcon.tagName === "IMG") {
-        DOM.sidebarIcon.alt = isOpen ? "menu open" : "menu closed";
-      } else {
-        DOM.sidebarIcon.textContent = isOpen ? "🚫" : "👀";
-      }
-    }
-  }
-
   /* =========================
-     Sidebar as Modal (Mobile)
+     Sidebar (mobile modal + desktop hide/show)
      ========================= */
   function openSidebarModal() {
     if (!DOM.sidebar) return;
-
-    // Add modal classes
     DOM.sidebar.classList.add("sidebar-modal");
     DOM.sidebar.style.display = "flex";
 
-    // Backdrop
     const backdrop = document.createElement("div");
     backdrop.id = "sidebar-backdrop";
     backdrop.className = "sidebar-backdrop";
     document.body.appendChild(backdrop);
 
-    // Close with backdrop click
     backdrop.addEventListener("click", closeSidebarModal);
 
-    updateToggleUI(true, "mobile");
+    updateSidebarToggleUI(true, "mobile");
   }
 
   function closeSidebarModal() {
     if (!DOM.sidebar) return;
-
     DOM.sidebar.classList.remove("sidebar-modal");
     DOM.sidebar.style.display = "none";
 
     const backdrop = document.getElementById("sidebar-backdrop");
     if (backdrop) backdrop.remove();
 
-    updateToggleUI(false, "mobile");
+    updateSidebarToggleUI(false, "mobile");
   }
 
-  // Close button inside sidebar
-  const sidebarCloseBtn = document.createElement("button");
-  sidebarCloseBtn.className = "sidebar-close-btn";
-  sidebarCloseBtn.innerHTML = "✖";
-  sidebarCloseBtn.addEventListener("click", closeSidebarModal);
-  if (DOM.sidebar) DOM.sidebar.prepend(sidebarCloseBtn);
+  function updateSidebarToggleUI(isOpen, mode = "desktop") {
+    if (!DOM.sidebarToggleBtn || !DOM.sidebarIcon) return;
 
-  // Mobile logo opens sidebar modal
+    if (mode === "mobile") {
+      DOM.sidebarToggleBtn.title = isOpen ? "Close Sidebar" : "Open Sidebar";
+      DOM.sidebarIcon.textContent = isOpen ? "✖" : "☰";
+    } else {
+      DOM.sidebarToggleBtn.title = isOpen ? "Hide Sidebar" : "Show Sidebar";
+      DOM.sidebarIcon.textContent = isOpen ? "🚫" : "👀";
+    }
+  }
+
+  function toggleSidebar() {
+    if (isMobileView()) {
+      DOM.sidebar.style.display === "flex" ? closeSidebarModal() : openSidebarModal();
+    } else {
+      if (DOM.sidebar.dataset.hidden === "true") {
+        DOM.sidebar.style.display = "block";
+        DOM.sidebar.dataset.hidden = "false";
+        updateSidebarToggleUI(true, "desktop");
+      } else {
+        DOM.sidebar.style.display = "none";
+        DOM.sidebar.dataset.hidden = "true";
+        updateSidebarToggleUI(false, "desktop");
+      }
+    }
+  }
+
+  // Mobile logo opens sidebar
   if (DOM.headerLogo) {
     DOM.headerLogo.addEventListener("click", (ev) => {
       ev.preventDefault();
@@ -146,50 +139,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Escape key
-  document.addEventListener("keydown", (ev) => {
-    if (ev.key === "Escape" && isMobileView()) {
-      closeSidebarModal();
-    }
-  });
-
-  function updateHeaderBoardVisibility() {
-    if (!DOM.headerBoardName) return;
-    DOM.headerBoardName.style.display = isMobileView() ? "none" : "";
-  }
-
-  function initSidebarState() {
-    if (!DOM.sidebar || !DOM.sidebarToggleBtn) return;
-
-    if (isMobileView()) {
-      DOM.sidebar.style.display = "none"; // hidden until modal opens
-    } else {
-      if (DOM.sidebar.dataset.hidden === "true") {
-        DOM.sidebar.style.display = "none";
-      } else {
-        DOM.sidebar.style.display = "block";
-      }
-    }
-
-    updateHeaderBoardVisibility();
-  }
-
-  if (DOM.sidebarToggleBtn && DOM.sidebar) {
-    initSidebarState();
-
+  // Sidebar toggle button
+  if (DOM.sidebarToggleBtn) {
     DOM.sidebarToggleBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      if (isMobileView()) openSidebarModal();
-      else
-        DOM.sidebar.dataset.hidden === "true"
-          ? (DOM.sidebar.style.display = "block", DOM.sidebar.dataset.hidden = "false")
-          : (DOM.sidebar.style.display = "none", DOM.sidebar.dataset.hidden = "true");
-    });
-
-    window.addEventListener("resize", () => {
-      initSidebarState();
+      toggleSidebar();
     });
   }
+
+  // Escape key closes mobile sidebar
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && isMobileView()) closeSidebarModal();
+  });
+
+  // Initialize sidebar state
+  function initSidebarState() {
+    if (!DOM.sidebar || !DOM.sidebarToggleBtn) return;
+    if (isMobileView()) DOM.sidebar.style.display = "none";
+    else {
+      if (DOM.sidebar.dataset.hidden === "true") DOM.sidebar.style.display = "none";
+      else DOM.sidebar.style.display = "block";
+    }
+  }
+  window.addEventListener("resize", initSidebarState);
+  initSidebarState();
 
   /* =========================
      Local Storage Helpers
@@ -197,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveTasksToLocal() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }
-
   function loadTasksFromLocal() {
     const stored = localStorage.getItem("tasks");
     if (stored) {
