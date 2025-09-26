@@ -124,6 +124,58 @@ body.dark #themeToggleBtn:hover {
   transform: scale(1.1);
 }
 
+/* ========================
+   Sidebar Modal (Mobile)
+======================== */
+.sidebar-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  max-width: 80%;
+  height: 100%;
+  background: var(--secondary-color);
+  z-index: 1001;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.sidebar-close-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  color: var(--primary-font-color);
+}
+
+/* ========================
+   Mobile Sidebar Rules
+======================== */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* hidden by default on mobile */
+  }
+
+  .kanban-logo {
+    cursor: pointer;
+  }
+}
+
+
 /* Sidebar */
 .sidebar {
   position: fixed;
