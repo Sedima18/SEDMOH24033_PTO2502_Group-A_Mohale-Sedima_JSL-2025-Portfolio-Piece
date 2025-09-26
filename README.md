@@ -80,7 +80,7 @@ Desktop: Click the Hide Sidebar button; layout expands.
 Mobile: Tap the menu icon to open; tap the backdrop or close icon to hide.
 
 ## Link for presentation
-
+https://www.loom.com/share/ea4b672064d74f3e94c2c6ff194c4583?sid=510680a4-f9e4-473e-b291-e4d0686e8d60
 
 ## deployment link
-https://gleeful-fenglisu-644752.netlify.app/
+https://gorgeous-stardust-eccd59.netlify.app/
