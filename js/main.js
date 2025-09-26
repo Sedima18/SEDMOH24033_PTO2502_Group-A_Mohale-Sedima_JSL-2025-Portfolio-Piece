@@ -91,39 +91,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function openSidebarMobile() {
-    DOM.sidebar.classList.add("sidebar-open");
-    DOM.sidebar.style.transform = "translateX(0)";
+  /* =========================
+     Sidebar as Modal (Mobile)
+     ========================= */
+  function openSidebarModal() {
+    if (!DOM.sidebar) return;
+
+    // Add modal classes
+    DOM.sidebar.classList.add("sidebar-modal");
+    DOM.sidebar.style.display = "flex";
+
+    // Backdrop
+    const backdrop = document.createElement("div");
+    backdrop.id = "sidebar-backdrop";
+    backdrop.className = "sidebar-backdrop";
+    document.body.appendChild(backdrop);
+
+    // Close with backdrop click
+    backdrop.addEventListener("click", closeSidebarModal);
+
     updateToggleUI(true, "mobile");
   }
 
-  function closeSidebarMobile() {
-    DOM.sidebar.classList.remove("sidebar-open");
-    DOM.sidebar.style.transform = "translateX(-100%)";
+  function closeSidebarModal() {
+    if (!DOM.sidebar) return;
+
+    DOM.sidebar.classList.remove("sidebar-modal");
+    DOM.sidebar.style.display = "none";
+
+    const backdrop = document.getElementById("sidebar-backdrop");
+    if (backdrop) backdrop.remove();
+
     updateToggleUI(false, "mobile");
   }
 
-  function showSidebarDesktop() {
-    DOM.sidebar.style.display = "block";
-    DOM.sidebar.dataset.hidden = "false";
-    updateToggleUI(true, "desktop");
+  // Close button inside sidebar
+  const sidebarCloseBtn = document.createElement("button");
+  sidebarCloseBtn.className = "sidebar-close-btn";
+  sidebarCloseBtn.innerHTML = "✖";
+  sidebarCloseBtn.addEventListener("click", closeSidebarModal);
+  if (DOM.sidebar) DOM.sidebar.prepend(sidebarCloseBtn);
+
+  // Mobile logo opens sidebar modal
+  if (DOM.headerLogo) {
+    DOM.headerLogo.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      openSidebarModal();
+    });
+  }
+  if (DOM.kanbanLogo) {
+    DOM.kanbanLogo.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      if (isMobileView()) openSidebarModal();
+    });
   }
 
-  function hideSidebarDesktop() {
-    DOM.sidebar.style.display = "none";
-    DOM.sidebar.dataset.hidden = "true";
-    updateToggleUI(false, "desktop");
-  }
-
-  function toggleSidebar() {
-    if (isMobileView()) {
-      DOM.sidebar.classList.contains("sidebar-open")
-        ? closeSidebarMobile()
-        : openSidebarMobile();
-    } else {
-      DOM.sidebar.dataset.hidden === "true" ? showSidebarDesktop() : hideSidebarDesktop();
+  // Escape key
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && isMobileView()) {
+      closeSidebarModal();
     }
-  }
+  });
 
   function updateHeaderBoardVisibility() {
     if (!DOM.headerBoardName) return;
@@ -134,14 +162,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!DOM.sidebar || !DOM.sidebarToggleBtn) return;
 
     if (isMobileView()) {
-      DOM.sidebar.style.transform = DOM.sidebar.classList.contains("sidebar-open")
-        ? "translateX(0)"
-        : "translateX(-100%)";
-      DOM.sidebar.style.display = "block";
-      updateToggleUI(DOM.sidebar.classList.contains("sidebar-open"), "mobile");
+      DOM.sidebar.style.display = "none"; // hidden until modal opens
     } else {
-      if (DOM.sidebar.dataset.hidden === "true") hideSidebarDesktop();
-      else showSidebarDesktop();
+      if (DOM.sidebar.dataset.hidden === "true") {
+        DOM.sidebar.style.display = "none";
+      } else {
+        DOM.sidebar.style.display = "block";
+      }
     }
 
     updateHeaderBoardVisibility();
@@ -152,43 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     DOM.sidebarToggleBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      toggleSidebar();
-    });
-
-    if (DOM.headerLogo) {
-      DOM.headerLogo.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        toggleSidebar();
-      });
-    }
-
-    if (DOM.kanbanLogo) {
-      DOM.kanbanLogo.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        if (isMobileView()) toggleSidebar();
-      });
-    }
-
-    document.addEventListener("click", (event) => {
-      if (!isMobileView()) return;
-      if (!DOM.sidebar.classList.contains("sidebar-open")) return;
-      if (
-        !DOM.sidebar.contains(event.target) &&
-        !DOM.sidebarToggleBtn.contains(event.target) &&
-        !(DOM.headerLogo && DOM.headerLogo.contains(event.target))
-      ) {
-        closeSidebarMobile();
-      }
-    });
-
-    document.addEventListener("keydown", (ev) => {
-      if (
-        ev.key === "Escape" &&
-        isMobileView() &&
-        DOM.sidebar.classList.contains("sidebar-open")
-      ) {
-        closeSidebarMobile();
-      }
+      if (isMobileView()) openSidebarModal();
+      else
+        DOM.sidebar.dataset.hidden === "true"
+          ? (DOM.sidebar.style.display = "block", DOM.sidebar.dataset.hidden = "false")
+          : (DOM.sidebar.style.display = "none", DOM.sidebar.dataset.hidden = "true");
     });
 
     window.addEventListener("resize", () => {
@@ -199,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Local Storage Helpers
      ========================= */
-
   function saveTasksToLocal() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }
@@ -219,7 +213,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Priority Helpers
      ========================= */
-
   function getPriorityColor(priority) {
     switch (priority) {
       case "High":
@@ -236,7 +229,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Task Functions
      ========================= */
-
   async function fetchTasks() {
     if (DOM.loadingMessage) DOM.loadingMessage.style.display = "block";
     if (DOM.errorMessage) DOM.errorMessage.style.display = "none";
@@ -412,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Theme Toggle
      ========================= */
-
   function applyModalTheme(isDark) {
     if (!DOM.modalBox) return;
     if (isDark) {
@@ -451,8 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      Init App
      ========================= */
-
   loadTasksFromLocal();
   if (tasks.length === 0) fetchTasks();
   else renderTasks();
-})
+});
